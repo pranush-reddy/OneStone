@@ -9,8 +9,7 @@ function Paths() {
    <BrowserRouter>
    <Routes>
     <Route path="/" element={<App />} />
-    <Route path="/customer-invoice" element={<PartA />} />
-     <Route path="/admin-invoice" element={<PartB />} />
+    
 </Routes>
 </BrowserRouter>
   )

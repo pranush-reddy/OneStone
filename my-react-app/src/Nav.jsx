@@ -30,18 +30,7 @@ function Nav() {
           >
             Home
           </Link>
-          <Link 
-            to='/customer-invoice'
-            className={location.pathname === '/customer-invoice' ? 'active' : ''}
-          >
-            Customer Invoice
-          </Link>
-          <Link 
-            to='/admin-invoice'
-            className={location.pathname === '/admin-invoice' ? 'active' : ''}
-          >
-            Admin Invoice
-          </Link>
+         
         </div>
         
         {/* Mobile Menu Button */}
@@ -65,20 +54,7 @@ function Nav() {
           >
             Home
           </Link>
-          <Link 
-            to='/customer-invoice'
-            className={location.pathname === '/customer-invoice' ? 'active' : ''}
-            onClick={closeMenu}
-          >
-            Customer Invoice
-          </Link>
-          <Link 
-            to='/admin-invoice'
-            className={location.pathname === '/admin-invoice' ? 'active' : ''}
-            onClick={closeMenu}
-          >
-            Admin Invoice
-          </Link>
+         
           
       
         </div>

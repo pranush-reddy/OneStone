@@ -36,11 +36,13 @@ table{
     padding: 10px;
     border-radius: 10px;
     font-size: 15px;
+
     width: max-content;
     cursor: pointer;
     text-align: center;
 }.btns{
     display: flex;
     justify-content: center;
+    gap:20px;
     margin-top: 2rem;
 }

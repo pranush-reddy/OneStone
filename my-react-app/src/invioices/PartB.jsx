@@ -1,128 +1,207 @@
-import { useLocation } from 'react-router-dom'
-import Nav from '../Nav'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
-import './PartB.css'
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import "./PartB.css";
 
 function PartB() {
-  const location = useLocation()
-  const props = JSON.parse(sessionStorage.getItem("data")) || {}
-    const amount=props?.Quantity*props?.Rate;
-    const subtotal=Number(amount)+Number(props.Transport)+Number(props.Labour)+Number(props.StandAdv) 
-const today = new Date();
-const dd = String(today.getDate()).padStart(2, '0');
-const mm = String(today.getMonth() + 1).padStart(2, '0'); 
-const yyyy = today.getFullYear();
+  const [disabled, setDisabled] = useState(false);
+  const [Name, SetName] = useState("");
+  const [Item, SetItem] = useState("");
+  const [Quantity, SetQuantity] = useState(0);
+  const [Rate, SetRate] = useState(0);
 
-const formattedDate = `${dd}/${mm}/${yyyy}`; 
 
-const generatePDF = () => {
-  const input = document.getElementById('invoice-table')
-  
-  if (!input) {
-    alert('Invoice table not found')
-    return
-  }
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, "0");
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const yyyy = today.getFullYear();
 
-  html2canvas(input, {
-    scale: 2, // Higher quality
-    useCORS: true,
-    logging: false,
-    backgroundColor: '#ffffff',
-    // Add padding through html2canvas options
-    onclone: function(clonedDoc) {
-      const clonedElement = clonedDoc.getElementById('invoice-table')
-      if (clonedElement) {
-        // Apply padding styles to the cloned element
-        clonedElement.style.padding = '15px'
-        clonedElement.style.boxSizing = 'border-box'
-      }
+  const formattedDate = `${dd}/${mm}/${yyyy}`;
+
+  const generatePDF = () => {
+    const input = document.getElementById("invoice-table");
+
+    if (!input) {
+      alert("Invoice table not found");
+      return;
     }
-  }).then((canvas) => {
-    const imgWidth = 190 // A4 width minus left/right padding
-    const imgHeight = (canvas.height * imgWidth) / canvas.width
-    
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF('p', 'mm', 'a4')
-    
-    // Add padding by positioning the image
-    const leftPadding = 10
-    const topPadding = 15
-    
-    pdf.addImage(imgData, 'PNG', leftPadding, topPadding, imgWidth, imgHeight)
-    
-    // Save the PDF
-    const fileName = `Invoice_${props.Name || 'Customer'}_${new Date().toISOString().split('T')[0]}.pdf`
-    pdf.save(fileName)
-  })
-}
 
- 
-    return (
+    html2canvas(input, {
+      scale: 2, // Higher quality
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+      // Add padding through html2canvas options
+      onclone: function (clonedDoc) {
+        const clonedElement = clonedDoc.getElementById("invoice-table");
+        if (clonedElement) {
+          // Apply padding styles to the cloned element
+          clonedElement.style.padding = "15px";
+          clonedElement.style.boxSizing = "border-box";
+        }
+      },
+    }).then((canvas) => {
+      const imgWidth = 190; // A4 width minus left/right padding
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      // Add padding by positioning the image
+      const leftPadding = 10;
+      const topPadding = 15;
+
+      pdf.addImage(
+        imgData,
+        "PNG",
+        leftPadding,
+        topPadding,
+        imgWidth,
+        imgHeight,
+      );
+
+      // Save the PDF
+      const fileName = `Invoice_${Name || "Customer"}_${new Date().toISOString().split("T")[0]}.pdf`;
+      pdf.save(fileName);
+    });
+  };
+  const HandleInvoice = (e) => {
+    e.preventDefault();
+    if (Name != "" && Item != "" && Quantity != 0 && Rate != 0) {
+       sessionStorage.setItem("PartB",JSON.stringify({
+        AGrand:FindGrand()
+      }))
+      setDisabled(true);
+    }
+  };
+
+
+  return (
     <>
-        <Nav/>
-        <div className='customer-invoice-container'>
-            <h3>Internal Invoice</h3>
-            <div>
-                <table id="invoice-table">
-                    <tr>
-                        <th colSpan={5}>Invoice</th>
-                    </tr>
-                    <tr>
-                        <td colSpan={3}>Name: <br/>
-                       {props.Name}</td>
-                       < td colSpan={3}>Date: <br/>
-                       {formattedDate}</td>
-                    </tr>
-                    <tr>
-                        <td colSpan={2}>Full Address:&nbsp;{"8-1/7/2 Hyderabad,50043"}</td>
-                    </tr>
-                    
-                    <tr>
-                        <th>Item Name</th>
-                        
-                        <th>Lot Id</th>
-                    <th>Quantity</th>
-                    <th>Rate</th>
-                    <th>Amount</th></tr>
-                       <tr className='items'> 
-                        <td>{props.Item}</td>
-                        <td>{"Not given"}</td>
-                        <td>{props.Quantity}</td>
-                        <td>{props.Rate}</td>
-                        <td>{amount}</td>
-                        </tr>
-                        <tr className='final1'>
-                            <td>{" "}</td>
-                            <td>{" "}</td>
-                            <td>Total:  {props.Quantity} </td>
-                            <td></td>
-                            <td>Total: ₹ {props.Quantity*props.Rate}</td>
-                        </tr>
-                        
-                           <tr>
-                             <td>{" "}</td>
-                            <td>{" "}</td>
-                            <td>{" "}</td>
-                            <td>Grand Total</td>
-                            <td>₹ {amount}</td>
-                        </tr>
-                </table>
-            </div>
+      <div className="customer-invoice-container">
+        <h3>Internal Invoice</h3>
+        <div>
+          <table id="invoice-table">
+            <tr>
+              <th colSpan={5}>Invoice</th>
+            </tr>
+            <tr>
+              <td colSpan={3}>
+                Name: <br />
+                <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Enter Party name"
+                  value={Name}
+                  onChange={(e) => {
+                    SetName(e.target.value);
+                  }}
+                />
+              </td>
+              <td colSpan={3}>
+                Date: <br />
+                {formattedDate}
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={5}>
+                Full Address:&nbsp;{"8-1/7/2 Hyderabad,500043"}
+              </td>
+            </tr>
+
+            <tr>
+              <th>Item Name</th>
+              <th>Lot Id</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+            <tr className="items">
+              <td>
+                {" "}
+                <input
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Enter product name"
+                  value={Item}
+                  onChange={(e) => {
+                    SetItem(e.target.value);
+                  }}
+                />
+              </td>
+              <td>{"MRB21c"}</td>
+              <td>
+                {" "}
+                <input
+                  disabled={disabled}
+                  required
+                  id="quantity"
+                  type="number"
+                  placeholder="Enter quantity"
+                  min="0"
+                  step="any"
+                  value={Quantity}
+                  onChange={(e) => {
+                    SetQuantity(e.target.value);
+                  }}
+                />
+              </td>
+              <td>
+                <input
+                  disabled={disabled}
+                  required
+                  id="rate"
+                  type="number"
+                  placeholder="Enter rate per unit"
+                  min="0"
+                  step="any"
+                  value={Rate}
+                  onChange={(e) => {
+                    SetRate(e.target.value);
+                  }}
+                />
+              </td>
+              <td>{Number(Quantity)*Number(Rate) || 0}</td>
+            </tr>
+            <tr className="final1">
+              <td> </td>
+              <td> </td>
+              <td>Total: {Quantity || 0}</td>
+              <td></td>
+              <td>Total(Rs): {Number(Quantity )* Number(Rate)}</td>
+            </tr>
+           
+            <tr>
+              <td> </td>
+              <td> </td>
+              <td> </td>
+              <td>Grand Total</td>
+              <td>{Number(Quantity )* Number(Rate) }</td>
+            </tr>
+          </table>
         </div>
-        <div className='btns'>
- <button onClick={generatePDF} className="btn-pdf">
-              Download PDF
-            </button>
-        </div>
-        <div className='adv'>
-            <h4>Total Amount (A+B) </h4>
-            <h5>₹ {subtotal + (subtotal * 18 / 100) +amount}</h5>
-        </div>
-        
+      </div>
+      <div className="btns">
+        <button onClick={HandleInvoice} className="btn-pdf" type="submit">
+     
+          Submit
+        </button>
+        <button onClick={generatePDF} className="btn-pdf">
+          Download PDF
+        </button>
+      </div>
+
+      <div className="pannel">
+        <div className="analytics"><h4>Part A</h4><br/><p>₹ {JSON.parse(sessionStorage.getItem("PartA"))?.AGrand || 0} /-</p></div>
+           <div className="analytics"><h4>Part B</h4><br/><p>₹ {JSON.parse(sessionStorage.getItem("PartB"))?.AGrand || 0} /-</p></div>
+              <div className="analytics"><h4>Total</h4><br/><p>₹ {JSON.parse(sessionStorage.getItem("PartB"))?.AGrand + JSON.parse(sessionStorage.getItem("PartB"))?.AGrand || 0} /-</p></div>
+      </div>
     </>
-      
-  )
+  
+  );
 }
 
-export default PartB
+export default PartB;
