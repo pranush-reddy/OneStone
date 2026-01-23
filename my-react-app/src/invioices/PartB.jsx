@@ -65,7 +65,81 @@ function PartB() {
       pdf.save(fileName);
     });
   };
- 
+const sharePDFToWhatsApp = async () => {
+  const input = document.getElementById("internal-table");
+
+  if (!input) {
+    alert("Invoice table not found");
+    return;
+  }
+
+  try {
+    const canvas = await html2canvas(input, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+      onclone: function (clonedDoc) {
+        const clonedElement = clonedDoc.getElementById("internal-table");
+        if (clonedElement) {
+          clonedElement.style.padding = "15px";
+          clonedElement.style.boxSizing = "border-box";
+        }
+      },
+    });
+
+    const imgWidth = 190;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const leftPadding = 10;
+    const topPadding = 15;
+
+    pdf.addImage(imgData, "PNG", leftPadding, topPadding, imgWidth, imgHeight);
+
+    // Get Blob instead of saving
+    const blob = pdf.output("blob");
+    const fileName = `Invoice_${Name || "Customer"}_${new Date().toISOString().split("T")[0]}.pdf`;
+    const file = new File([blob], fileName, { type: "application/pdf" });
+
+    // Try Web Share API first (mobile-friendly)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: "Invoice PDF",
+        files: [file],
+      });
+      return;
+    }
+
+    // Fallback: Download + WhatsApp Web link (works on desktop/mobile)
+    const blobUrl = URL.createObjectURL(blob);
+    
+    // Trigger download
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // Open WhatsApp Web with download instructions
+    setTimeout(() => {
+      window.open(
+        `https://web.whatsapp.com/send?text=Here's your invoice PDF (check downloads): ${fileName}`,
+        "_blank"
+      );
+    }, 500);
+
+    // Cleanup
+    URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Share failed:", error);
+    alert("Failed to generate PDF for sharing");
+  }
+};
+
+
 
   const HandleInvoice = (e) => {
     e.preventDefault();
@@ -195,6 +269,9 @@ function PartB() {
         </button>
         <button onClick={generatePDF} className="btn-pdf">
           Download PDF
+        </button>
+         <button onClick={sharePDFToWhatsApp } className="btn-pdf">
+         Share 
         </button>
       </div>
 
