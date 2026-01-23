@@ -3,6 +3,7 @@ import { useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "./PartB.css";
+import SmartPanel from "./SmartPanel";
 
 function PartB() {
   const [disabled, setDisabled] = useState(false);
@@ -10,8 +11,6 @@ function PartB() {
   const [Item, SetItem] = useState("");
   const [Quantity, SetQuantity] = useState(0);
   const [Rate, SetRate] = useState(0);
-
-
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -66,15 +65,36 @@ function PartB() {
       pdf.save(fileName);
     });
   };
+  const ClearAll=()=>{
+  sessionStorage.removeItem("PartA");
+  sessionStorage.removeItem("PartB");
+
+  refreshValues();
+ }
+ const refreshValues = () => {
+  setPartA(JSON.parse(sessionStorage.getItem("PartA")));
+  setPartB(JSON.parse(sessionStorage.getItem("PartB")));
+};
+
   const HandleInvoice = (e) => {
     e.preventDefault();
+   
     if (Name != "" && Item != "" && Quantity != 0 && Rate != 0) {
        sessionStorage.setItem("PartB",JSON.stringify({
-        AGrand:FindGrand()
+        BGrand:(Quantity*Rate)
       }))
       setDisabled(true);
+    }else{
+ console.log("failed");
     }
+refreshValues();
   };
+const CalculateA=()=>{
+  return JSON.parse(sessionStorage.getItem("PartA"))?.AGrand
+}
+const CalculateB=()=>{
+  return JSON.parse(sessionStorage.getItem("PartB"))?.BGrand
+}
 
 
   return (
@@ -194,11 +214,7 @@ function PartB() {
         </button>
       </div>
 
-      <div className="pannel">
-        <div className="analytics"><h4>Part A</h4><br/><p>₹ {JSON.parse(sessionStorage.getItem("PartA"))?.AGrand || 0} /-</p></div>
-           <div className="analytics"><h4>Part B</h4><br/><p>₹ {JSON.parse(sessionStorage.getItem("PartB"))?.AGrand || 0} /-</p></div>
-              <div className="analytics"><h4>Total</h4><br/><p>₹ {JSON.parse(sessionStorage.getItem("PartB"))?.AGrand + JSON.parse(sessionStorage.getItem("PartB"))?.AGrand || 0} /-</p></div>
-      </div>
+    <SmartPanel/>
     </>
   
   );
