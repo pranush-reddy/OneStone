@@ -97,7 +97,7 @@ function PartA() {
       <div className="customer-invoice-container">
         <h3>Customer Invoice</h3>
         <div>
-          <table id="invoice-table">
+          <table id="invoice-table"><thead>
             <tr>
               <th colSpan={5}>Invoice</th>
             </tr>
@@ -263,7 +263,7 @@ function PartA() {
               <td> </td>
               <td>Grand Total</td>
               <td>{ FindGrand()}</td>
-            </tr>
+            </tr></thead>
           </table>
         </div>
       </div>

@@ -19,7 +19,7 @@ function PartB() {
   const formattedDate = `${dd}/${mm}/${yyyy}`;
 
   const generatePDF = () => {
-    const input = document.getElementById("invoice-table");
+    const input = document.getElementById("internal-table");
 
     if (!input) {
       alert("Invoice table not found");
@@ -33,7 +33,7 @@ function PartB() {
       backgroundColor: "#ffffff",
       // Add padding through html2canvas options
       onclone: function (clonedDoc) {
-        const clonedElement = clonedDoc.getElementById("invoice-table");
+        const clonedElement = clonedDoc.getElementById("internal-table");
         if (clonedElement) {
           // Apply padding styles to the cloned element
           clonedElement.style.padding = "15px";
@@ -65,16 +65,7 @@ function PartB() {
       pdf.save(fileName);
     });
   };
-  const ClearAll=()=>{
-  sessionStorage.removeItem("PartA");
-  sessionStorage.removeItem("PartB");
-
-  refreshValues();
- }
- const refreshValues = () => {
-  setPartA(JSON.parse(sessionStorage.getItem("PartA")));
-  setPartB(JSON.parse(sessionStorage.getItem("PartB")));
-};
+ 
 
   const HandleInvoice = (e) => {
     e.preventDefault();
@@ -87,22 +78,15 @@ function PartB() {
     }else{
  console.log("failed");
     }
-refreshValues();
   };
-const CalculateA=()=>{
-  return JSON.parse(sessionStorage.getItem("PartA"))?.AGrand
-}
-const CalculateB=()=>{
-  return JSON.parse(sessionStorage.getItem("PartB"))?.BGrand
-}
-
 
   return (
     <>
       <div className="customer-invoice-container">
         <h3>Internal Invoice</h3>
         <div>
-          <table id="invoice-table">
+          <table id="internal-table">
+            <thead>
             <tr>
               <th colSpan={5}>Invoice</th>
             </tr>
@@ -200,7 +184,7 @@ const CalculateB=()=>{
               <td> </td>
               <td>Grand Total</td>
               <td>{Number(Quantity )* Number(Rate) }</td>
-            </tr>
+            </tr></thead>
           </table>
         </div>
       </div>
