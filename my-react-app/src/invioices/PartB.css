@@ -1,0 +1,14 @@
+.adv{
+    padding: 15px;
+    width: max-content;
+    color: white;
+    border-radius: 10px;
+    margin-left: 5vw;
+    transition: transform 0.3s ease-in-out;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}.adv h5{
+    font-size: 20px;
+}.adv:hover{
+    transform: scale(1.06);
+
+}

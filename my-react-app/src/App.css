@@ -1,0 +1,46 @@
+
+/* Add to your CSS file or in a style tag */
+#form {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+#submit-btn{
+  background-color: rgb(100, 31, 169);
+  padding: 10px;
+  border-radius: 10px;
+  width: max-content;
+  color: white;
+  border: none;
+  cursor: pointer;
+}#submit-btn:hover{
+ background-color: rgb(129, 50, 207);
+}
