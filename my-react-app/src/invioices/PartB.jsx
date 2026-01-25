@@ -1,23 +1,52 @@
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "./PartB.css";
 import SmartPanel from "./SmartPanel";
 
-function PartB() {
-  const [disabled, setDisabled] = useState(false);
-  const [Name, SetName] = useState("");
-  const [Item, SetItem] = useState("");
-  const [Quantity, SetQuantity] = useState(0);
-  const [Rate, SetRate] = useState(0);
-  const today = new Date();
-  const dd = String(today.getDate()).padStart(2, "0");
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const yyyy = today.getFullYear();
+function PartB({Extra,Amount,Quantity,Rate,Transport,Labour,StandAdv,GST,Grand ,Name, Date,Address,SalesMan,Item,Lot,Pcs,Designer,}) {
 
-  const formattedDate = `${dd}/${mm}/${yyyy}`;
-
+const GetGrand=()=>{
+    if(Extra<1){
+        return Grand;
+    }else{
+      let amt=Number(Extra);
+      amt=(amt/0.18).toFixed(2);
+        return Number(amt)+Number(CalculateGst());
+    }
+}
+const MainGrand=()=>{
+  if(Extra<1){
+    return GetGrand();
+  }
+  let amt=Amt();
+  return amt+Number(Transport)+Number(Labour);
+}
+const CalculateGst=()=>{
+    if(Extra<1){
+       return GST;
+    }else{ return Number(Extra).toFixed(2);}    
+}
+    const Amt=()=>{
+        if(Extra<1){
+               return Amount;
+        }else{
+            return Math.abs(GetGrand()-Grand)-Number(Transport)-Number(Labour);
+        }
+    }
+    const CalRate=()=>{
+        if(Extra<1){
+               return Number(Rate);
+        }else{
+            const amt=Amt();
+            return Number(amt/Quantity);
+        }
+    }  
+    const formatForDisplay = (yyyymmdd) => {
+  const [yyyy, mm, dd] = yyyymmdd.split("-");
+  return `${dd}-${mm}-${yyyy}`; 
+};
   const generatePDF = () => {
     const input = document.getElementById("internal-table");
 
@@ -156,112 +185,119 @@ const sharePDFToWhatsApp = async () => {
 
   return (
     <>
-      <div className="customer-invoice-container">
+      <div>
         <h3>Internal Invoice</h3>
-        <div>
-          <table id="internal-table">
-            <thead>
+              <table id="internal-table">
+                <thead>
             <tr>
-              <th colSpan={5}>Invoice</th>
+              <th colSpan={6}>Invoice</th>
             </tr>
             <tr>
               <td colSpan={3}>
-                Name: <br />
-                <input
-                  required
-                  id="name"
-                  disabled={disabled}
-                  type="text"
-                  placeholder="Enter Party name"
-                  value={Name}
-                  onChange={(e) => {
-                    SetName(e.target.value);
-                  }}
-                />
+               <b>Name:</b> <br />
+                {Name}
               </td>
               <td colSpan={3}>
-                Date: <br />
-                {formattedDate}
+                <b>Date</b> <br />
+                 {formatForDisplay(Date)}
               </td>
             </tr>
             <tr>
-              <td colSpan={5}>
-                Full Address:&nbsp;{"8-1/7/2 Hyderabad,500043"}
+              <td colSpan={6}>
+               <b>Full Address:</b>&nbsp; {Address}
               </td>
             </tr>
+   <tr>
+              <td colSpan={3}>
+                Sales Man Reff: <br />
+                {SalesMan}
+              </td>
+              <td colSpan={3}>
+                Arc / Interior Designer  <br />
+                 {Designer}
+              </td>
+            </tr>
+            <tr>
+              <th>Description</th>
 
-            <tr>
-              <th>Item Name</th>
               <th>Lot Id</th>
-              <th>Quantity</th>
+              <th>No.of Pc</th>
+              <th>Qty (sqft)</th>
               <th>Rate</th>
               <th>Amount</th>
             </tr>
             <tr className="items">
               <td>
-                {" "}
-                <input
-                  disabled={disabled}
-                  type="text"
-                  placeholder="Enter product name"
-                  value={Item}
-                  onChange={(e) => {
-                    SetItem(e.target.value);
-                  }}
-                />
+                {Item}
               </td>
-              <td>{"MRB21c"}</td>
+              <td> {Lot}</td>
+                     <td> {Pcs}</td>
               <td>
-                {" "}
-                <input
-                  disabled={disabled}
-                  required
-                  id="quantity"
-                  type="number"
-                  placeholder="Enter quantity"
-                  min="0"
-                  step="any"
-                  value={Quantity}
-                  onChange={(e) => {
-                    SetQuantity(e.target.value);
-                  }}
-                />
+                
+                {Quantity}
               </td>
               <td>
-                <input
-                  disabled={disabled}
-                  required
-                  id="rate"
-                  type="number"
-                  placeholder="Enter rate per unit"
-                  min="0"
-                  step="any"
-                  value={Rate}
-                  onChange={(e) => {
-                    SetRate(e.target.value);
-                  }}
-                />
+               {CalRate().toFixed(2)}
               </td>
-              <td>{Number(Quantity)*Number(Rate) || 0}</td>
+              <td>{Amt()}</td>
             </tr>
             <tr className="final1">
               <td> </td>
               <td> </td>
-              <td>Total: {Quantity || 0}</td>
+
+              <td>Total: { Number(Pcs)}</td>
+              <td>Total: {Number(Quantity).toFixed(2)}</td>
               <td></td>
-              <td>Total(Rs): {Number(Quantity )* Number(Rate)}</td>
+            <td></td>
             </tr>
-           
+           {Transport &&  (<>
             <tr>
               <td> </td>
               <td> </td>
+              
+              <td> </td>
+              <td> </td>
+              <td>Transport</td>
+              <td> {Transport || 0}</td>
+            </tr></>)}
+           {(Labour>1)  && (<><tr>
+              <td> </td>
+              <td> </td>
+              
+              <td> </td>
+              <td> </td>
+              <td>Labour</td>
+              <td>{Labour || 0}</td>
+            </tr></>)}
+            {(StandAdv>1) && (<><tr>
+              <td> </td>
+              <td> </td>
+              
+              <td> </td>
+              <td> </td>
+              <td>Stand Adv</td>
+              <td> {StandAdv || 0}</td>
+            </tr></>)}
+            <tr>
+              <td> </td>
+              <td> </td>
+              
+              <td> </td>
+              <td> </td>
+              <td>GST (18%)</td>
+              <td>{CalculateGst()}</td>
+            </tr>
+            <tr>
+              <td> </td>
+              <td> </td>
+              
+              <td> </td>
               <td> </td>
               <td>Grand Total</td>
-              <td>{Number(Quantity )* Number(Rate) }</td>
+              <td>{ MainGrand()}</td>
             </tr></thead>
           </table>
-        </div>
-      </div>
+    </div>
       <div className="btns">
         <button onClick={HandleInvoice} className="btn-pdf" type="submit">
      

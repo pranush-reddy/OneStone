@@ -471,7 +471,9 @@ function PartA() {
       <Govr Name={Name} SalesMan={SalesMan} Designer={Designer} Address={Address} Date={SelectDate} Item={Item} Lot={Lot}
       Pcs={Pcs}  Extra={Extra} Quantity={Quantity} Amount={CalTotal()} Rate={Rate}
        Transport={Transport} Labour={Labour} StandAdv={StandAdv} GST={GetGst()} Grand={FindGrand().toFixed(2)}/>
-      <PartB/>
+      <PartB Name={Name} SalesMan={SalesMan} Designer={Designer} Address={Address} Date={SelectDate} Item={Item} Lot={Lot}
+      Pcs={Pcs}  Extra={Extra} Quantity={Quantity} Amount={CalTotal()} Rate={Rate}
+       Transport={Transport} Labour={Labour} StandAdv={StandAdv} GST={GetGst()} Grand={FindGrand().toFixed(2)}/>
     </>
   
   );
