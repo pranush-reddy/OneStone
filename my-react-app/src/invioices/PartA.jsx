@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PartB from './PartB'
 import "./PartA.css";
+import Govr from "./Govr";
 
 function PartA() {
   const [disabled, setDisabled] = useState(false);
@@ -16,7 +17,18 @@ function PartA() {
   const [Transport, SetTransport] = useState(0);
   const [Labour, SetLabour] = useState(0);
   const [StandAdv, SetStandAdv] = useState(0);
-
+  
+  const [ Extra,SetExtra] = useState(0);
+  
+  const [Pcs, SetPcs] = useState(0);
+  const[Address,SetAddress]=useState("");
+  const [SelectDate, SetDate] = useState(() => {
+  const today = new Date().toISOString().split("T")[0];
+  return today; // e.g., "2026-01-25"
+});
+  const[SalesMan,SetSalesMan]=useState("");
+  const [Lot,SetLot]=useState("");
+  const [Designer,SetDesigner]=useState("");
   // const subtotal =
   //   Number(amount) +
   //   Number(props.Transport) +
@@ -159,20 +171,41 @@ function PartA() {
       setDisabled(true);
     }
   };
-  const FindGrand=()=>{
-    const subtotal=Number(Quantity )* Number(Rate)+Number(Transport)+Number(Labour)+Number(StandAdv);
-    const grand=subtotal + (subtotal * 18 / 100)
-    return grand
+  const CalTotal=()=>{
+    return (Number(Quantity)*Number(Rate)).toFixed(2) || 0
   }
+  const FindGrand=()=>{
+    let grand=0;
+    const subtotal=CalSub();
+    if(Extra<1){
+      grand+=subtotal;
+      grand+=((subtotal *18)/100);
+    }else{
+      grand+=subtotal+Number(Extra);
+    }
+    return Number(grand)
+  }
+  const CalSub=()=>{
+   return Number(Quantity )* Number(Rate)+Number(Transport)+Number(Labour)+Number(StandAdv)
+    
+  };
+  const GetGst=()=>{
+      let sub=CalSub();
+      sub=(sub*18/100);
+      return sub.toFixed(2);
+  } 
 
   return (
     <>
       <div className="customer-invoice-container">
-        <h3>Customer Invoice</h3>
+        <h3>Estimation & Quotation</h3>
+        <h5>Create and manage quotations and estimates
+
+</h5>
         <div>
           <table id="invoice-table"><thead>
             <tr>
-              <th colSpan={5}>Invoice</th>
+              <th colSpan={6}>Invoice</th>
             </tr>
             <tr>
               <td colSpan={3}>
@@ -191,20 +224,67 @@ function PartA() {
               </td>
               <td colSpan={3}>
                 Date: <br />
-                {formattedDate}
+                 <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="date"
+                  placeholder="Select Date"
+                  value={SelectDate}
+                  onChange={(e) => {
+                    SetDate(e.target.value);
+                  }}/>
               </td>
             </tr>
             <tr>
-              <td colSpan={5}>
-                Full Address:&nbsp;{"8-1/7/2 Hyderabad,500043"}
+              <td colSpan={6}>
+                Full Address:&nbsp; <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Enter Address"
+                  value={Address}
+                  onChange={(e) => {
+                    SetAddress(e.target.value);
+                  }}/>
               </td>
             </tr>
-
+   <tr>
+              <td colSpan={3}>
+                Sales Man Reff: <br />
+                <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Enter Salesman name "
+                  value={SalesMan}
+                  onChange={(e) => {
+                    SetSalesMan(e.target.value);
+                  }}
+                />
+              </td>
+              <td colSpan={3}>
+                Arc / Interior Designer  <br />
+                 <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Enter Designer"
+                  value={Designer}
+                  onChange={(e) => {
+                    SetDesigner(e.target.value);
+                  }}/>
+              </td>
+            </tr>
             <tr>
-              <th>Item Name</th>
+              <th>Description</th>
 
               <th>Lot Id</th>
-              <th>Quantity</th>
+              <th>No.of Pc</th>
+              <th>Qty (sqft)</th>
               <th>Rate</th>
               <th>Amount</th>
             </tr>
@@ -214,14 +294,33 @@ function PartA() {
                 <input
                   disabled={disabled}
                   type="text"
-                  placeholder="Enter product name"
+                  placeholder="Enter Description"
                   value={Item}
                   onChange={(e) => {
                     SetItem(e.target.value);
                   }}
                 />
               </td>
-              <td>{"MRB21c"}</td>
+              <td> <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Enter LotID"
+                  value={Lot}
+                  onChange={(e) => {
+                    SetLot(e.target.value);
+                  }}/></td>
+                     <td> <input
+                  required
+                  id="name"
+                  disabled={disabled}
+                  type="Number"
+                  placeholder="Enter Pcs"
+                  value={Pcs}
+                  onChange={(e) => {
+                    SetPcs(e.target.value);
+                  }}/></td>
               <td>
                 {" "}
                 <input
@@ -253,23 +352,30 @@ function PartA() {
                   }}
                 />
               </td>
-              <td>{Number(Quantity)*Number(Rate) || 0}</td>
+              <td>{CalTotal()}</td>
             </tr>
             <tr className="final1">
               <td> </td>
               <td> </td>
+
+              <td>Total: {Pcs || 0}</td>
               <td>Total: {Quantity || 0}</td>
               <td></td>
-              <td>Total(Rs): {Number(Quantity )* Number(Rate)}</td>
+            <td></td>
+            </tr>
+            <tr>
+              <td> </td>
+              
+              <td> </td>
+              <td> </td>
+              <td> </td>
+              <td>Extra</td>
+              <td><input type="text" id="name" value={Extra} onChange={(e)=>{SetExtra(e.target.value)}}/></td>
             </tr>
             <tr>
               <td> </td>
               <td> </td>
-              <td> </td>
-              <th colSpan={2}>{"Extras "}</th>
-            </tr>
-            <tr>
-              <td> </td>
+              
               <td> </td>
               <td> </td>
               <td>Transport</td>
@@ -287,6 +393,8 @@ function PartA() {
             <tr>
               <td> </td>
               <td> </td>
+              
+              <td> </td>
               <td> </td>
               <td>Labour</td>
               <td><input required disabled={disabled}
@@ -303,13 +411,15 @@ function PartA() {
             <tr>
               <td> </td>
               <td> </td>
+              
+              <td> </td>
               <td> </td>
               <td>Stand Adv</td>
               <td> <input required disabled={disabled}
               id="standAdv"
               type='number' 
               placeholder="Enter standard advance"
-              min="0" step="any"
+              min="0" step="0.01"
               value={StandAdv} 
               onChange={(e) => {
                 SetStandAdv(e.target.value)
@@ -318,24 +428,30 @@ function PartA() {
             </tr>
             <tr>
               <td> </td>
+              
+              <td> </td>
               <td> </td>
               <td> </td>
               <td>Sub Total</td>
-              <td>{Number(Quantity )* Number(Rate)+Number(Transport)+Number(Labour)+Number(StandAdv)}</td>
+              <td>{CalSub().toFixed(2)}</td>
             </tr>
             <tr>
               <td> </td>
+              <td> </td>
+              
               <td> </td>
               <td> </td>
               <td>GST</td>
-              <td>{"18%"}</td>
+              <td>{GetGst()}</td>
             </tr>
             <tr>
               <td> </td>
               <td> </td>
+              
+              <td> </td>
               <td> </td>
               <td>Grand Total</td>
-              <td>{ FindGrand()}</td>
+              <td>{ FindGrand().toFixed(2)}</td>
             </tr></thead>
           </table>
         </div>
@@ -351,6 +467,10 @@ function PartA() {
          Share 
         </button>
       </div>
+      
+      <Govr Name={Name} SalesMan={SalesMan} Designer={Designer} Address={Address} Date={SelectDate} Item={Item} Lot={Lot}
+      Pcs={Pcs}  Extra={Extra} Quantity={Quantity} Amount={CalTotal()} Rate={Rate}
+       Transport={Transport} Labour={Labour} StandAdv={StandAdv} GST={GetGst()} Grand={FindGrand().toFixed(2)}/>
       <PartB/>
     </>
   
