@@ -13,7 +13,7 @@ const GetGrand=()=>{
     if(Extra<1){
         return Grand;
     }else{
-        return 0;
+        return Number(Amt())+Number(CalculateGst());
     }
 }
 const CalculateGst=()=>{
@@ -154,7 +154,7 @@ const CalculateGst=()=>{
               <td> </td>
               <td> </td>
               <td>Grand Total</td>
-              <td>{ Grand}</td>
+              <td>{ GetGrand()}</td>
             </tr></thead>
           </table>
     </div>
