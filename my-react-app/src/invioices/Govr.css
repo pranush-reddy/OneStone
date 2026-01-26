@@ -1,22 +1,22 @@
-table{
+#gst-table{
     width: 70vw;
-
     font-weight: 400;
-    padding: 20px;
     margin: 0 auto;
-    padding-bottom: 20vh;
-    margin-bottom: 20vh;
-}/* Add this to PartA.css */
-#gst-table {
+    margin-top: 10px;
   border-collapse: collapse !important;
   border-spacing: 0 !important;
 }
 
 #gst-table th,
 #invoice-table td {
+
   border: 0.5px solid #000 !important; /* Use 0.5px instead of 1px */
 }
 
 #gst-table {
   border: 1px solid #000 !important; /* Outer border */
+}.gst-container{
+    margin-top:13px;
+}.heds{
+    text-align: center;
 }

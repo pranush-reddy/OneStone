@@ -45,74 +45,89 @@ const CalculateGst=()=>{
 
   return (
     <>
-    <div>
-        <h3>GST split Invoice</h3>
               <table id="gst-table">
-                <thead>
-            <tr>
-              <th colSpan={6}>Invoice</th>
-            </tr>
-            <tr>
-              <td colSpan={3}>
-               <b>Name:</b> <br />
-                {Name}
+                <tbody>
+         
+            <tr >
+              <td style={{paddingTop:'20px'}} colSpan={4}>
+               Sales Man Reff:&nbsp;{SalesMan}
               </td>
-              <td colSpan={3}>
-                <b>Date</b> <br />
+              <td style={{paddingTop:'20px'}} colSpan={1}>
+                Date:&nbsp;
                  {formatForDisplay(Date)}
               </td>
             </tr>
-            <tr>
-              <td colSpan={6}>
-               <b>Full Address:</b>&nbsp; {Address}
+            <tr> <td colSpan={5}>
+               Name of Party (Firm / Person): &nbsp;
+                {Name}
+              </td></tr>
+              <tr> <td colSpan={5}>
+               GST Number : &nbsp;
+             
+              </td></tr>
+                            <tr> <td colSpan={5}>
+               PAN Number with copy : &nbsp;
+                
+              </td></tr>
+               <tr>
+              <td colSpan={5}>
+               Full Billing Address with Pincode:&nbsp; 
               </td>
             </tr>
-   <tr>
-              <td colSpan={3}>
-                Sales Man Reff: <br />
-                {SalesMan}
-              </td>
-              <td colSpan={3}>
-                Arc / Interior Designer  <br />
-                 {Designer}
+            <tr style={{height:'25px'}}>&nbsp;</tr>
+            <tr>
+              <td colSpan={5}>
+               Full Site Address with Pincode:&nbsp; {Address}
               </td>
             </tr>
-            <tr>
-              <th>Description</th>
-
-              <th>Lot Id</th>
-              <th>No.of Pc</th>
-              <th>Qty (sqft)</th>
-              <th>Rate</th>
-              <th>Amount</th>
+            <tr style={{height:'25px'}}>&nbsp;</tr>
+           
+            <tr><td colSpan={5}>Vehicle Number :</td></tr>
+        
+            <tr className='heds'>
+                <td style={{width:'2vw'}}>SN</td>
+              <td style={{width:'38vw'}}>ACC Description</td>
+              <td>Qty (sqft)</td>
+              <td>Rate</td>
+              <td>Amount</td>
             </tr>
             <tr className="items">
-              <td>
-                {Item}
-              </td>
-              <td> {Lot}</td>
-                     <td> {Pcs}</td>
-              <td>
-                
-                {Quantity}
-              </td>
-              <td>
-               {CalRate().toFixed(2)}
-              </td>
+                <td>1.</td>
+              <td>{Item} </td>
+
+              <td>{Quantity}</td>
+              <td>{CalRate().toFixed(2)}</td>
               <td>{Amt()}</td>
             </tr>
-            <tr className="final1">
-              <td> </td>
-              <td> </td>
-
-              <td>Total: { Number(Pcs)}</td>
-              <td>Total: {Number(Quantity).toFixed(2)}</td>
+            <tr>
+              <td  style={{textAlign:'center'}}>2.</td>
               <td></td>
-            <td></td>
-            </tr>
+              <td></td>
+              
+              <td></td>
+              <td></td>
+             </tr>
+             <tr>
+              <td  style={{textAlign:'center'}}>3.</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+             </tr>
+             <tr>
+              <td  style={{textAlign:'center'}}>4.</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+             </tr>
+             <tr><td  style={{textAlign:'center'}}>5.</td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td></tr>
            {ShowGen &&  (<>
             <tr>
-              <td> </td>
               <td> </td>
               
               <td> </td>
@@ -122,7 +137,6 @@ const CalculateGst=()=>{
             </tr>
             <tr>
               <td> </td>
-              <td> </td>
               
               <td> </td>
               <td> </td>
@@ -130,7 +144,6 @@ const CalculateGst=()=>{
               <td>{Labour || 0}</td>
             </tr>
             <tr>
-              <td> </td>
               <td> </td>
               
               <td> </td>
@@ -143,21 +156,18 @@ const CalculateGst=()=>{
               <td> </td>
               
               <td> </td>
-              <td> </td>
               <td>GST (18%)</td>
               <td>{CalculateGst()}</td>
             </tr>
             <tr>
               <td> </td>
-              <td> </td>
-              
+
               <td> </td>
               <td> </td>
               <td>Grand Total</td>
               <td>{ GetGrand()}</td>
-            </tr></thead>
+            </tr></tbody>
           </table>
-    </div>
     </>
   )
 }

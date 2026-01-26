@@ -194,17 +194,17 @@ const sharePDFToWhatsApp = async () => {
             </tr>
             <tr>
               <td colSpan={3}>
-               <b>Name:</b> <br />
+               Name <br />
                 {Name}
               </td>
               <td colSpan={3}>
-                <b>Date</b> <br />
+                Date <br />
                  {formatForDisplay(Date)}
               </td>
             </tr>
             <tr>
               <td colSpan={6}>
-               <b>Full Address:</b>&nbsp; {Address}
+               Full Address:&nbsp; {Address}
               </td>
             </tr>
    <tr>

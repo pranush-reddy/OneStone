@@ -1,0 +1,20 @@
+.section2{
+    display: grid;
+     grid-template-columns: 1fr 1fr;
+      margin-bottom:20px;
+      gap:21px;
+    width: max-content;
+      margin: 0 auto;
+      
+}.section-below{
+    display: flex;
+    width: 34vw;
+}
+.Advance-Rec{
+    text-align: center;
+    
+}
+.creds{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

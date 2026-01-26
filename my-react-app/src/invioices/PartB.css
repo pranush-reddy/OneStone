@@ -2,6 +2,9 @@
   border-collapse: collapse !important;
   border-spacing: 0 !important;
 }
+#internal-table{
+  width: 70vw;
+}
 
 #internal-table th,
 #internal-table td {
