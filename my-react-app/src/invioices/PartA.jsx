@@ -472,7 +472,7 @@ const downloadAllTablesAsPDF = async () => {
           <table id="invoice-table">
             <thead>
               <tr>
-                <th colSpan={7}>Invoice</th>
+                <th style={{backgroundColor:'#e7e7e7'}} colSpan={7}>Invoice</th>
               </tr></thead>
               <tbody>
               <tr>
@@ -547,7 +547,7 @@ const downloadAllTablesAsPDF = async () => {
                 </td>
               </tr>
               <tr id="items-head" className="make-center">
-                <td > SN </td>
+                <td > SNo </td>
                 <td>Description</td>
 
                 <td>Lot Id</td>

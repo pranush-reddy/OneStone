@@ -10,7 +10,7 @@ function PartASec() {
             <td colSpan="4">Advance Received</td>
           </tr>
           <tr className='heds'>
-            <td style={{maxWidth:'1vw'}}>SN</td>
+            <td style={{maxWidth:'1vw'}}>SNo</td>
             <td >Date</td>
             <td style={{minWidth:'4vw'}}></td>
             <td style={{maxWidth:'4vw'}}>RTGS/UPI</td>

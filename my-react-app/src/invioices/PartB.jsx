@@ -186,15 +186,15 @@ const shareToWhatsAppDesktop = async () => {
               <table id="internal-table">
                 <tbody>
             <tr>
-              <th colSpan={7}>Invoice</th>
+              <th style={{backgroundColor:'#e7e7e7'}} colSpan={7}>Invoice</th>
             </tr>
             <tr>
               <td colSpan={4}>
-               Name <br />
+               Name : &nbsp;
                 {Name}
               </td>
               <td colSpan={3}>
-                Date <br />
+                Date : &nbsp;
                  {formatForDisplay(Date)}
               </td>
             </tr>
@@ -205,11 +205,11 @@ const shareToWhatsAppDesktop = async () => {
             </tr>
    <tr>
               <td colSpan={4}>
-                Sales Man Reff: <br />
+                Sales Man Reff: 
                 {SalesMan}
               </td>
               <td colSpan={3}>
-                Arc / Interior Designer  <br />
+                Arc / Interior Designer  
                  {Designer}
               </td>
             </tr>

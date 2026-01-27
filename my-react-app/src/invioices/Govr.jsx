@@ -232,7 +232,7 @@ const CalculateGst=()=>{
             <tr><td colSpan={5}>Vehicle Number :</td></tr>
         
             <tr className='heds'>
-                <td style={{width:'2vw'}}>SN</td>
+                <td style={{width:'2vw'}}>SNo</td>
               <td style={{width:'38vw'}}>ACC Description</td>
               <td>Qty (sqft)</td>
               <td>Rate</td>
