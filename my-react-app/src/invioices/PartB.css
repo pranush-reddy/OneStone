@@ -41,4 +41,6 @@ table , tr ,th,td{
     margin-bottom: 50px;
 }.analytics:hover{
     transform: scale(1.03);
+}tr.make-center td{
+  text-align: center;
 }

@@ -55,145 +55,141 @@ const CalculateGst=()=>{
       return;
     }
 
-    html2canvas(input, {
-      scale: 2, // Higher quality
+    // Create wrapper
+    const wrapper = document.createElement('div');
+    wrapper.style.width = '794px';
+    wrapper.style.margin = '0 auto';
+    wrapper.style.padding = '20px';
+    wrapper.style.boxSizing = 'border-box';
+    wrapper.style.background = '#ffffff';
+    wrapper.style.position = 'absolute';
+    wrapper.style.left = '-9999px';
+    wrapper.style.top = '0';
+
+    // Clone and append content
+    const content = input.cloneNode(true);
+    wrapper.appendChild(content);
+
+    // Apply styles
+    wrapper.style.fontFamily = 'Arial, sans-serif';
+    wrapper.style.lineHeight = '1.5';
+
+    // Style the table (FIXED)
+    const table = wrapper.querySelector('#internal-table');
+    if (table) {
+      table.style.width = '100%';
+      table.style.borderCollapse = 'collapse';
+      table.style.boxSizing = 'border-box';
+      table.style.margin = '10px 0';
+      table.style.transform = 'none';
+    }
+
+    // Style table cells
+    const cells = wrapper.querySelectorAll('td, th');
+    cells.forEach(cell => {
+      cell.style.border = '1px solid #000000';
+      cell.style.padding = '8px';
+      cell.style.textAlign = 'left';
+    });
+
+    // Style inputs
+    const inputs = wrapper.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.style.border = '1px solid #ffffff';
+      input.style.padding = '4px';
+      input.style.background = '#f9f9f9';
+      input.style.width = '100%';
+      input.style.boxSizing = 'border-box';
+    });
+
+    // Hide select elements (FIXED)
+    const selects = wrapper.querySelectorAll('select');
+    selects.forEach(select => {
+      select.style.display = 'none';
+    });
+
+    // Add to document
+    document.body.appendChild(wrapper);
+
+    // Generate PDF
+    html2canvas(wrapper, {
+      scale: 1,
       useCORS: true,
-      logging: false,
-      backgroundColor: "#ffffff",
-      // Add padding through html2canvas options
-      onclone: function (clonedDoc) {
-        const clonedElement = clonedDoc.getElementById("internal-table");
-        if (clonedElement) {
-          // Apply padding styles to the cloned element
-          clonedElement.style.padding = "15px";
-          clonedElement.style.boxSizing = "border-box";
-        }
-      },
+      logging: true,
+      backgroundColor: '#ffffff',
+      width: 794,
+      height: wrapper.scrollHeight,
+      windowWidth: 794,
+      onclone: (clonedDoc, element) => {
+        element.style.background = '#ffffff';
+        element.style.position = 'relative';
+        element.style.left = '0';
+        element.style.opacity = '1';
+
+        const clonedTables = element.querySelectorAll('table');
+        clonedTables.forEach(table => {
+          table.style.border = '1px solid #000';
+        });
+      }
     }).then((canvas) => {
-      const imgWidth = 190; // A4 width minus left/right padding
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      document.body.removeChild(wrapper);
 
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-
-      // Add padding by positioning the image
-      const leftPadding = 10;
-      const topPadding = 15;
-
-      pdf.addImage(
-        imgData,
-        "PNG",
-        leftPadding,
-        topPadding,
-        imgWidth,
-        imgHeight,
-      );
-
-      // Save the PDF
-      const fileName = `Invoice_${Name || "Customer"}_${new Date().toISOString().split("T")[0]}.pdf`;
-      pdf.save(fileName);
-    });
-  };
-const sharePDFToWhatsApp = async () => {
-  const input = document.getElementById("internal-table");
-
-  if (!input) {
-    alert("Invoice table not found");
-    return;
-  }
-
-  try {
-    const canvas = await html2canvas(input, {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      backgroundColor: "#ffffff",
-      onclone: function (clonedDoc) {
-        const clonedElement = clonedDoc.getElementById("internal-table");
-        if (clonedElement) {
-          clonedElement.style.padding = "15px";
-          clonedElement.style.boxSizing = "border-box";
-        }
-      },
-    });
-
-    const imgWidth = 190;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const leftPadding = 10;
-    const topPadding = 15;
-
-    pdf.addImage(imgData, "PNG", leftPadding, topPadding, imgWidth, imgHeight);
-
-    // Get Blob instead of saving
-    const blob = pdf.output("blob");
-    const fileName = `Invoice_${Name || "Customer"}_${new Date().toISOString().split("T")[0]}.pdf`;
-    const file = new File([blob], fileName, { type: "application/pdf" });
-
-    // Try Web Share API first (mobile-friendly)
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        title: "Invoice PDF",
-        files: [file],
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
       });
-      return;
-    }
 
-    // Fallback: Download + WhatsApp Web link (works on desktop/mobile)
-    const blobUrl = URL.createObjectURL(blob);
-    
-    // Trigger download
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    // Open WhatsApp Web with download instructions
-    setTimeout(() => {
-      window.open(
-        `https://web.whatsapp.com/send?text=Here's your invoice PDF (check downloads): ${fileName}`,
-        "_blank"
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight) * 0.95;
+
+      pdf.addImage(imgData, "PNG",
+        (pdfWidth - imgWidth * ratio) / 2,
+        10,
+        imgWidth * ratio,
+        imgHeight * ratio
       );
-    }, 500);
 
-    // Cleanup
-    URL.revokeObjectURL(blobUrl);
-  } catch (error) {
-    console.error("Share failed:", error);
-    alert("Failed to generate PDF for sharing");
-  }
-};
+       const fileName2 = `Invoice_${new globalThis.Date().toISOString().split("T")[0]}.pdf`;
+      pdf.save(fileName2);
 
-
-
-  const HandleInvoice = (e) => {
-    e.preventDefault();
-   
-    if (Name != "" && Item != "" && Quantity != 0 && Rate != 0) {
-       sessionStorage.setItem("PartB",JSON.stringify({
-        BGrand:(Quantity*Rate)
-      }))
-      setDisabled(true);
-    }else{
- console.log("failed");
-    }
+    }).catch(error => {
+      console.error("PDF generation error:", error);
+      if (document.body.contains(wrapper)) {
+        document.body.removeChild(wrapper);
+      }
+    });
   };
+const shareToWhatsAppDesktop = async () => {
+    const mainGrandValue= MainGrand();
+  // Open WhatsApp Web
+  const message = encodeURIComponent(
+    "We've a new Internal invoice!!\n"+
+    `Date: ${Date}\n`+`Amount:${mainGrandValue}\n`+
+    `On Item : ${Item}`
+  );
+  
+  window.open(`https://web.whatsapp.com/send?text=${message}`, "_blank");
+  
+  URL.revokeObjectURL(url);
+}
+
 
   return (
     <>
       <div>
         <h3>Internal Invoice</h3>
               <table id="internal-table">
-                <thead>
+                <tbody>
             <tr>
-              <th colSpan={6}>Invoice</th>
+              <th colSpan={7}>Invoice</th>
             </tr>
             <tr>
-              <td colSpan={3}>
+              <td colSpan={4}>
                Name <br />
                 {Name}
               </td>
@@ -203,12 +199,12 @@ const sharePDFToWhatsApp = async () => {
               </td>
             </tr>
             <tr>
-              <td colSpan={6}>
+              <td colSpan={7}>
                Full Address:&nbsp; {Address}
               </td>
             </tr>
    <tr>
-              <td colSpan={3}>
+              <td colSpan={4}>
                 Sales Man Reff: <br />
                 {SalesMan}
               </td>
@@ -217,14 +213,14 @@ const sharePDFToWhatsApp = async () => {
                  {Designer}
               </td>
             </tr>
-            <tr>
-              <th>Description</th>
-
-              <th>Lot Id</th>
-              <th>No.of Pc</th>
-              <th>Qty (sqft)</th>
-              <th>Rate</th>
-              <th>Amount</th>
+            <tr className="make-center">
+              <td >SNo</td>
+              <td>Description</td>
+              <td>Lot Id</td>
+              <td>No.of Pc</td>
+              <td>Qty (sqft)</td>
+              <td>Rate</td>
+              <td>Amount</td>
             </tr>
             <tr className="items">
               <td>
@@ -241,15 +237,7 @@ const sharePDFToWhatsApp = async () => {
               </td>
               <td>{Amt()}</td>
             </tr>
-            <tr className="final1">
-              <td> </td>
-              <td> </td>
-
-              <td>Total: { Number(Pcs)}</td>
-              <td>Total: {Number(Quantity).toFixed(2)}</td>
-              <td></td>
-            <td></td>
-            </tr>
+            
            {Transport &&  (<>
             <tr>
               <td> </td>
@@ -295,23 +283,19 @@ const sharePDFToWhatsApp = async () => {
               <td> </td>
               <td>Grand Total</td>
               <td>{ MainGrand()}</td>
-            </tr></thead>
+            </tr></tbody>
           </table>
     </div>
       <div className="btns">
-        <button onClick={HandleInvoice} className="btn-pdf" type="submit">
-     
-          Submit
-        </button>
+      
         <button onClick={generatePDF} className="btn-pdf">
           Download PDF
         </button>
-         <button onClick={sharePDFToWhatsApp } className="btn-pdf">
+         <button onClick={shareToWhatsAppDesktop } className="btn-pdf">
          Share 
         </button>
       </div>
 
-    <SmartPanel/>
     </>
   
   );

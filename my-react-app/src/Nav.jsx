@@ -22,16 +22,7 @@ function Nav() {
           <h2>One Stone MRM</h2>
         </div>
         
-        {/* Desktop Navigation Links */}
-        <div className='navlinks'>
-          <Link 
-            to='/' 
-            className={location.pathname === '/' ? 'active' : ''}
-          >
-            Home
-          </Link>
-         
-        </div>
+      
         
         {/* Mobile Menu Button */}
         <button className="menu-toggle" onClick={toggleMenu}>

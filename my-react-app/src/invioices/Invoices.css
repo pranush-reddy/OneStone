@@ -1,0 +1,47 @@
+/* Invoices.css */
+.invoices-container {
+  padding: 20px;
+}
+
+.invoices-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.no-invoices {
+  text-align: center;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.no-invoices p {
+  color: #666;
+  margin: 10px 0;
+}
+
+.invoices-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.invoices-table th {
+  background: #7d2cdf;
+  color: white;
+  padding: 15px;
+  text-align: left;
+}
+
+.invoices-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.invoices-table tr:hover {
+  background: #f8f9fa;
+}
