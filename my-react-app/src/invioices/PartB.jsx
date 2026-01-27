@@ -223,6 +223,7 @@ const shareToWhatsAppDesktop = async () => {
               <td>Amount</td>
             </tr>
             <tr className="items">
+              <td>1</td>
               <td>
                 {Item}
               </td>
@@ -237,10 +238,52 @@ const shareToWhatsAppDesktop = async () => {
               </td>
               <td>{Amt()}</td>
             </tr>
+            <tr className="items">
+              <td>2</td>
+              <td>
+              </td>
+              <td> </td>
+                     <td> </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr className="items">
+              <td>3</td>
+              <td>
+              </td>
+              <td> </td>
+                     <td> </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr className="items">
+              <td>4</td>
+              <td>
+              </td>
+              <td> </td>
+                     <td> </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr className="items">
+              <td>5</td>
+              <td>
+              </td>
+              <td> </td>
+                     <td> </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+
             
            {Transport &&  (<>
             <tr>
               <td> </td>
+              <td></td>
               <td> </td>
               
               <td> </td>
@@ -251,7 +294,7 @@ const shareToWhatsAppDesktop = async () => {
            {(Labour>1)  && (<><tr>
               <td> </td>
               <td> </td>
-              
+               <td></td>
               <td> </td>
               <td> </td>
               <td>Labour</td>
@@ -260,7 +303,7 @@ const shareToWhatsAppDesktop = async () => {
             {(StandAdv>1) && (<><tr>
               <td> </td>
               <td> </td>
-              
+               <td></td>
               <td> </td>
               <td> </td>
               <td>Stand Adv</td>
@@ -269,7 +312,7 @@ const shareToWhatsAppDesktop = async () => {
             <tr>
               <td> </td>
               <td> </td>
-              
+               <td></td>
               <td> </td>
               <td> </td>
               <td>GST (18%)</td>
@@ -278,7 +321,7 @@ const shareToWhatsAppDesktop = async () => {
             <tr>
               <td> </td>
               <td> </td>
-              
+               <td></td>
               <td> </td>
               <td> </td>
               <td>Grand Total</td>

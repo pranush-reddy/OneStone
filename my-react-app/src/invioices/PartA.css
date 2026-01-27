@@ -44,6 +44,8 @@ width: 70vw !important;
 
 .btn-pdf{
     color: white;
+    border: none;
+    scale: 0.9;
     background:linear-gradient(to top right, rgb(34, 9, 74) ,rgb(108, 53, 192));
     padding: 10px;
     border-radius: 10px;

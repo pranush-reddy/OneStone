@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Nav from "../Nav";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -10,11 +10,13 @@ import PartASec from "./PartASec";
 
 function PartA() {
   const [disabled, setDisabled] = useState(false);
+
   const location = useLocation();
   const [Name, SetName] = useState("");
   const [Item, SetItem] = useState("");
   const [Quantity, SetQuantity] = useState("");
   const [Rate, SetRate] = useState("");
+  const [SaveStatus,SetSaveStatus]=useState("Save Invoice")
   const [Transport, SetTransport] = useState("");
   const [Labour, SetLabour] = useState("");
   const [StandAdv, SetStandAdv] = useState("");
@@ -180,6 +182,7 @@ const shareToWhatsAppDesktop = async () => {
     e.preventDefault();
     if (Name != "" && Item != "" && Quantity != 0 && Rate != 0) {
   let ind = 1;
+  SetSaveStatus("processing...")
 
 // Get or initialize index
 if(sessionStorage.getItem("index")){
@@ -206,7 +209,7 @@ allInvoices[invoiceNumber] = {
   Dispatch1: Number(AGrand()).toFixed(2),
   Dispatch2: BsecGrand().toFixed(2)
 };
-
+SetSaveStatus("Saved!!")
 // Save updated invoices back to sessionStorage
 sessionStorage.setItem("InvoiceDetails", JSON.stringify(allInvoices));
 
@@ -824,9 +827,9 @@ const downloadAllTablesAsPDF = async () => {
         GST={GetGst()}
         Grand={FindGrand().toFixed(2)}
       />
-      <div style={{display:'flex',justifyContent:'center'}}>
+      <div style={{display:'flex',justifyContent:'center',gap:'25px'}}>
         <button onClick={HandleInvoice} className="btn-pdf" type="submit">
-          Save Invoice
+          {SaveStatus}
         </button> <button onClick={downloadAllTablesAsPDF} className="btn-pdf" type="submit">
           Download All
         </button></div>
