@@ -1,0 +1,91 @@
+.multi-item-container {
+  margin: 20px 0;
+}
+
+.item-section {
+  border-radius: 10px;
+  padding:0px;
+  background: #f9f9f9;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.item-header h3 {
+  color: #007bff;
+  margin: 0;
+}
+
+.remove-item-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.remove-item-btn:hover {
+  background: #c82333;
+}
+
+.item-total {
+  background: #e7f3ff;
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 5px;
+  border-left: 4px solid #007bff;
+  font-size: 16px;
+}
+
+.add-item-section {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.add-item-section button {
+  background: #28a745;
+  color: white;
+  padding: 12px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-item-section button:hover {
+  background: #218838;
+}
+
+.grand-total {
+  background: #d4edda;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 8px;
+  text-align: center;
+  border: 2px solid #28a745;
+}
+
+.submit-all-section {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.submit-all-section button {
+  background: #17a2b8;
+  color: white;
+  padding: 15px 40px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.submit-all-section button:hover {
+  background: #138496;
+}

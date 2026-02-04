@@ -3,7 +3,12 @@ import React, { useState ,useEffect} from 'react'
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import './Govr.css'
-function Govr({Extra,Amount,Quantity,Rate,Transport,Labour,StandAdv,GST,Grand ,Name, Date,Address,SalesMan,Item,Lot,Pcs,Designer,}) {
+        
+function Govr({Designer,Address,Date,Name,
+       Items,Extra,SalesMan,
+        Amount,Transport,
+        Labour,StandAdv,Rate,
+        GST,data,Grand}) {
     const [ShowGen,SetShowGen]=useState(false);
       const [selected, setSelected] = useState('');
     const [getNO,SetGSTno]=useState("");
@@ -23,7 +28,7 @@ const GetGrand=()=>{
     if(Extra<1){
         return Grand;
     }else{
-        return Number(Amt())+Number(CalculateGst());
+        return Number(Number(Number(data.grandTotal)*CalRate().toFixed(2)).toFixed(2))+Number(CalculateGst());
     }
 }
 const CalculateGst=()=>{
@@ -31,27 +36,26 @@ const CalculateGst=()=>{
        return GST;
     }else{ return Number(Extra).toFixed(2);}    
 }
-    const Amt=()=>{
-        if(Extra<1){
-               return Amount;
-        }else{
+    // const Amt=()=>{
+    //     if(Extra<1){
+    //            return Amount;
+    //     }else{
             
-            let amt=Number(Extra);
-            return (amt/0.18).toFixed(2);
-        }
-    }
+    //         let amt=Number(Extra);
+    //         return (amt/0.18).toFixed(2);
+    //     }
+    // }
     const CalRate=()=>{
-        if(Extra<1){
-               return Number(Rate);
-        }else{
+        if(Extra>1){
+               
+        
             const amt=(Extra/0.18).toFixed(2);
-            return Number(amt/Quantity);
+            return Number(amt/data.grandTotal);
+        }else{
+          return 1;
         }
     }
-    const formatForDisplay = (yyyymmdd) => {
-  const [yyyy, mm, dd] = yyyymmdd.split("-");
-  return `${dd}-${mm}-${yyyy}`; 
-};
+
     const generatePDF = () => {
         const input = document.getElementById("gst-table");
         
@@ -182,6 +186,9 @@ const CalculateGst=()=>{
   
   URL.revokeObjectURL(url);
 }
+useEffect(()=>{
+  console.log(Rate);
+})
 
   return (
     <>
@@ -194,7 +201,7 @@ const CalculateGst=()=>{
               </td>
               <td style={{paddingTop:'20px'}} colSpan={1}>
                 Date:&nbsp;
-                 {formatForDisplay(Date)}
+                 {Date}
               </td>
             </tr>
             <tr> <td colSpan={5}>
@@ -235,44 +242,32 @@ const CalculateGst=()=>{
                 <td style={{width:'2vw'}}>SNo</td>
               <td style={{width:'38vw'}}>ACC Description</td>
               <td>Qty (sqft)</td>
-              <td>Rate</td>
+              <td>Rate </td>
               <td>Amount</td>
             </tr>
-            <tr className="items">
-                <td>1.</td>
-              <td>{Item} </td>
-
-              <td>{Quantity}</td>
-              <td>{CalRate().toFixed(2)}</td>
-              <td>{Amt()}</td>
+                    {Items.map((item, index) => (
+          
+  <tr key={item.id || index}>
+    <td style={{ textAlign: 'center' }}>{item.id}</td>
+    <td>{item.ColorSelect || ''}</td>
+    <td>{item.totalArea?.toFixed(2) || '0.00'}</td>
+   <td>
+               {Extra>1 ? CalRate().toFixed(2) :Rate[item.id] }
+              </td>
+              <td style={{textAlign:'right'}}>
+               {Extra<1 ? Number(Rate[item.id]* item.totalArea).toFixed(2) : (CalRate()*item.totalArea).toFixed(2) }
+              </td>
+   
+  </tr>
+))}
+            <tr style={{backgroundColor:'#f2f2f2'}}>
+              <td></td>
+              <td></td>
+              <td style={{textAlign:'right'}}>Total:&nbsp;{data.grandTotal}</td>
+              <td  style={{textAlign:'right'}}></td>
+              <td></td>
             </tr>
-            <tr>
-              <td  style={{textAlign:'center'}}>2.</td>
-              <td></td>
-              <td></td>
-              
-              <td></td>
-              <td></td>
-             </tr>
-             <tr>
-              <td  style={{textAlign:'center'}}>3.</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-             </tr>
-             <tr>
-              <td  style={{textAlign:'center'}}>4.</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-             </tr>
-             <tr><td  style={{textAlign:'center'}}>5.</td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td></tr>
+           
            {ShowGen &&  (<>
             <tr>
               <td> </td>
@@ -298,6 +293,13 @@ const CalculateGst=()=>{
               <td>Stand Adv</td>
               <td> {StandAdv || 0}</td>
             </tr></>)}
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Sub Total:</td>
+              <td>{Number(Number(data?.grandTotal) * CalRate()?.toFixed(2) || 0).toFixed(2) || 0}</td>
+            </tr>
             <tr>
               <td> </td>
               <td> </td>

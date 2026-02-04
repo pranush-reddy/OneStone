@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-<PartA/>
+<PartA {...location.state}/>
     </>
   )
 }

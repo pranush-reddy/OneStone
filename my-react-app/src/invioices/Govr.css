@@ -10,11 +10,11 @@
 #gst-table th,
 #invoice-table td {
 
-  border: 0.5px solid #000 !important; /* Use 0.5px instead of 1px */
+  border: 0.5px solid #000 !important; 
 }
 
 #gst-table {
-  border: 1px solid #000 !important; /* Outer border */
+  border: 1px solid #000 !important; 
 }.gst-container{
     margin-top:13px;
 }.heds{

@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Nav from "../Nav";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -8,11 +8,16 @@ import "./PartA.css";
 import Govr from "./Govr";
 import PartASec from "./PartASec";
 
-function PartA() {
+function PartA( ) {
+    const location = useLocation();
+const data = location.state || {};
+
+useEffect(()=>{
+  // Access table data
+console.log(data)
+},[data]);
   const [disabled, setDisabled] = useState(false);
 
-  const location = useLocation();
-  const [Name, SetName] = useState("");
   const [Item, SetItem] = useState("");
   const [Quantity, SetQuantity] = useState("");
   const [Rate, SetRate] = useState("");
@@ -23,15 +28,39 @@ function PartA() {
 
   const [Extra, SetExtra] = useState("");
 const [isSubmitted,SetSubmitted]=useState(false);
-  const [Pcs, SetPcs] = useState("");
-  const [Address, SetAddress] = useState("");
   const [SelectDate, SetDate] = useState(() => {
     const today = new Date().toISOString().split("T")[0];
     return today; // e.g., "2026-01-25"
   });
-  const [SalesMan, SetSalesMan] = useState("");
-  const [Lot, SetLot] = useState("");
-  const [Designer, SetDesigner] = useState("");
+  const [rates, setRates] = useState({});
+
+  // Initialize rates from rows[0].rate
+  useEffect(() => {
+    if (data.items) {
+      const initialRates = {};
+      data.items.forEach(item => {
+        // Get rate from first row if exists
+        initialRates[item.id] = item.rows?.[0]?.rate || '';
+      });
+      setRates(initialRates);
+    }
+  }, [data.items]);
+
+  const handleRateChange = (itemId, value) => {
+    setRates(prev => ({
+      ...prev,
+      [itemId]: value
+    }));
+   
+  };
+
+  const formatDateToYMD = (date) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${day}-${month}-${year}`;
+};
   // const subtotal =
   //   Number(amount) +
   //   Number(props.Transport) +
@@ -287,6 +316,7 @@ const AGst=()=>{
   };
   const CalSub = () => {
     return (
+      CalTotAmt()+
       Number(Quantity) * Number(Rate) +
       Number(Transport) +
       Number(Labour) +
@@ -464,6 +494,23 @@ const downloadAllTablesAsPDF = async () => {
     alert("Failed to generate PDF. Please try again.");
   }
 };
+const CalPieceTotal=()=>{
+  let tot=0;
+  data.items.map((value,index)=>{
+    tot+=value.rows.length
+  });
+  return Number(tot);
+};
+const CalSQFT=()=>{
+  return data.grandTotal;
+} 
+const CalTotAmt=()=>{
+  let sum=0;
+  data.items.map((item,index)=>{
+      sum+=item.totalArea * (rates[item.id] || item.rows?.[0]?.rate || 0)
+  })
+  return Number(sum);
+}
   return (
     <>
         <h3>Estimation & Quotation</h3>
@@ -472,212 +519,77 @@ const downloadAllTablesAsPDF = async () => {
           <table id="invoice-table">
             <thead>
               <tr>
-                <th style={{backgroundColor:'#e7e7e7'}} colSpan={7}>Invoice</th>
+                <th style={{backgroundColor:'#f2f2f2'}} colSpan={7}>Invoice</th>
               </tr></thead>
               <tbody>
               <tr>
                 <td colSpan={5}>
                   Name of the Party: &nbsp;
-                  <input
-                    required readOnly={isSubmitted}
-                    id="name"
-                    disabled={disabled}
-                    type="text"
-                    value={Name}
-                    onChange={(e) => {
-                      SetName(e.target.value);
-                    }}
-                  />
+                 {data.Name || ""}
                 </td>
                 <td colSpan={2}>
                   Date:&nbsp;
-                  <input
-                    required readOnly={isSubmitted}
-                    id="name"
-                    disabled={disabled}
-                    type="date"
-                    value={SelectDate}
-                    onChange={(e) => {
-                      SetDate(e.target.value);
-                    }}
-                  />
+                  {formatDateToYMD(data.ThisDate) || ""}
                 </td>
               </tr>
               <tr>
                 <td colSpan={7}>
                   Full Site Address with Pincode:&nbsp;
-                  <input
-                    required
-                    id="name"
-                    disabled={disabled}
-                    type="text" readOnly={isSubmitted}
-                    value={Address}
-                    onChange={(e) => {
-                      SetAddress(e.target.value);
-                    }}
-                  />
+                 {data.Address}
                 </td>
               </tr>
               <tr>
                 <td colSpan={3}>
                   Sales Man Reff: &nbsp;
-                  <input
-                    required
-                    id="sd" readOnly={isSubmitted}
-                    disabled={disabled}
-                    type="text"
-                    value={SalesMan}
-                    onChange={(e) => {
-                      SetSalesMan(e.target.value);
-                    }}
-                  />
+                  {data.SalesMan}
                 </td>
                 <td colSpan={4}>
-                  Arc / Interior Designer &nbsp;
-                  <input readOnly={isSubmitted}
-                    required
-                    disabled={disabled}
-                    id="sd"
-                    type="text"
-                    value={Designer}
-                    onChange={(e) => {
-                      SetDesigner(e.target.value);
-                    }}
-                  />
+                  Arc / Interior Designer: &nbsp;
+                 {data.Refer}
                 </td>
               </tr>
               <tr id="items-head" className="make-center">
                 <td > SNo </td>
-                <td>Description</td>
+                <td style={{width:'25%'}}>Description</td>
 
                 <td>Lot Id</td>
-                <td>No.of Pc</td>
-                <td>Qty (sqft)</td>
+                <td style={{width:'10%'}}>No.of Pc</td>
+                <td style={{width:'15%'}}>Qty (sqft)</td>
                 <td>Rate</td>
                 <td>Amount</td>
               </tr>
-              <tr className="items">
-                <td> 1</td>
-                <td>
-                  
-                  <input
-                    disabled={disabled}
-                    type="text"
-                    id="data"
-                    value={Item} readOnly={isSubmitted}
-                    onChange={(e) => {
-                      SetItem(e.target.value);
-                    }}
-                  />
-                </td>
-                <td>
-                  
-                  <input
-                    required
-                     id="data" readOnly={isSubmitted}
-                    disabled={disabled}
-                    type="text"
-                    value={Lot}
-                    onChange={(e) => {
-                      SetLot(e.target.value);
-                    }}
-                  />
-                </td>
-                <td>
-                  
-                  <input
-                    required readOnly={isSubmitted}
-                      id="data"
-                    disabled={disabled}
-                    type="Number"
-                    value={Pcs}
-                    onChange={(e) => {
-                      SetPcs(e.target.value);
-                    }}
-                  />
-                </td>
-                <td>
-                  
-                  <input
-                    disabled={disabled}
-                    required readOnly={isSubmitted}
-                    id="data"
-                    type="number"
-                    min="0"
-                    step="any"
-                    value={Quantity}
-                    onChange={(e) => {
-                      SetQuantity(e.target.value);
-                    }}
-                  />
-                </td>
-                <td>
-                  <input
-                    disabled={disabled} readOnly={isSubmitted}
-                    required
-                      id="data"
-                    type="number"
-                    
-                    min="0"
-                    step="any"
-                    value={Rate}
-                    onChange={(e) => {
-                      SetRate(e.target.value);
-                    }}
-                  />
-                </td>
-                <td>{CalTotal()}</td>
-              </tr>
-             <tr>
-              <td  style={{textAlign:'center'}}>2</td>
+         {data.items.map((item, index) => (
+          
+  <tr key={item.id || index}>
+    <td style={{ textAlign: 'center' }}>{item.id}</td>
+    <td>{item.ColorSelect || ''}</td>
+    <td>{item.LotID || ''}</td>
+    <td>{item.rows?.length || ''}</td>
+    <td>{item.totalArea?.toFixed(2) || '0.00'}</td>
+   <td>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={rates[item.id] || item.rows?.[0]?.rate || ''}
+                  onChange={(e) => handleRateChange(item.id, e.target.value)}
+                  className="data"
+                  style={{ width: '100px' }}
+                />
+              </td>
+              <td style={{textAlign:'right'}}>
+                ₹{(item.totalArea * (rates[item.id] || item.rows?.[0]?.rate || 0)).toFixed(2)}
+              </td>
+   
+  </tr>
+))}
+            <tr style={{backgroundColor:'#f2f2f2'}}>
               <td></td>
               <td></td>
               <td></td>
+              <td style={{textAlign:'right'}}>Total: &nbsp;{CalPieceTotal()}</td>
+              <td  style={{textAlign:'right'}}>Total:&nbsp;{CalSQFT()}</td>
               <td></td>
-              <td></td>
-              <td></td>
-             </tr>
-             <tr>
-              <td  style={{textAlign:'center'}}>3</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-             </tr>
-             <tr>
-              <td  style={{textAlign:'center'}}>4</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-             </tr>
-             <tr><td  style={{textAlign:'center'}}>5</td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td></tr>
-             <tr><td style={{textAlign:'center'}}>6</td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td>
-             <td></td></tr>
-             <tr>
-              <td  style={{textAlign:'center'}}>7</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-             </tr>
+            </tr>
               <tr>
            
                 <td style={{textAlign:'end'}} colSpan={6}>Others</td>
@@ -789,30 +701,29 @@ const downloadAllTablesAsPDF = async () => {
       </div>
       
   <Govr
-        Name={Name}
-        SalesMan={SalesMan}
-        Designer={Designer}
-        Address={Address}
-        Date={SelectDate}
-        Item={Item}
-        Lot={Lot}
-        Pcs={Pcs}
+        Name={data.Name}
+        SalesMan={data.SalesMan}
+        Designer={data.Refer}
+        Address={data.Address}
+        Date={formatDateToYMD(data.ThisDate)}
+       Items={data.items}
         Extra={Extra}
         Quantity={Quantity}
         Amount={CalTotal()}
-        Rate={Rate}
+        Rate={rates}
         Transport={Transport}
         Labour={Labour}
         StandAdv={StandAdv}
         GST={GetGst()}
+        data={data}
         Grand={FindGrand().toFixed(2)}
       />
 
-      <PartB
-        Name={Name}
-        SalesMan={SalesMan}
+      {/* <PartB
+        Name={"Name"}
+        SalesMan={"SalesMan"}
         Designer={Designer}
-        Address={Address}
+        Address={"sd"}
         Date={SelectDate}
         Item={Item}
         Lot={Lot}
@@ -826,7 +737,7 @@ const downloadAllTablesAsPDF = async () => {
         StandAdv={StandAdv}
         GST={GetGst()}
         Grand={FindGrand().toFixed(2)}
-      />
+      /> */}
       <div style={{display:'flex',justifyContent:'center',gap:'25px'}}>
         <button onClick={HandleInvoice} className="btn-pdf" type="submit">
           {SaveStatus}
