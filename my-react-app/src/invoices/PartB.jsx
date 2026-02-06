@@ -41,10 +41,7 @@ const CalculateGst=()=>{
     }
     const CalRate=()=>{
         if(Extra>1){
-            const amt=(Extra/0.18).toFixed(2);
             return ((MainGrand()-Transport-Labour)/data.grandTotal).toFixed(2);
-        }else{
-          return 1;
         }
     }
     const formatForDisplay = (yyyymmdd) => {
@@ -236,10 +233,10 @@ const shareToWhatsAppDesktop = async () => {
     <td>{item.rows?.length || ''}</td>
     <td>{item.totalArea?.toFixed(2) || '0.00'}</td>
    <td>
-                {CalRate()}
+                {Extra>0 ? CalRate() : Rate[item.id]}
               </td>
               <td style={{textAlign:'right'}}>
-                {(CalRate()*item.totalArea).toFixed(2)}
+                {Number(Extra>0 ? CalRate()*item.totalArea : Rate[item.id]*item.totalArea).toFixed(2)}
               </td>
    
   </tr>

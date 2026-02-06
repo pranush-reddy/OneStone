@@ -4,18 +4,53 @@ function OverviewTemplate() {
     const location=useLocation();
     const data=location.state || {};
 
-const GetFinal=()=>{
-    let grand=0;
-      data.items.map((item, index) => (
-        grand+=item.rate*item.totalArea).toFixed(2))
-    if(data.Extra>0){
-        grand+=data?.Transport+data?.Labour
+ const GetFinal = () => {
+            let grand = 0;
+            if (data.items && Array.isArray(data.items)) {
+                data.items.forEach((item) => {
+                    const itemAmount = parseFloat(item.amount) || 0;
+                    grand += itemAmount;
+                    console.log(`Item ${item.id}: ${itemAmount}, Running total: ${grand}`);
+                });
+            }
+            
+            // 2. Add Transport if exists
+            if (data.Transport && parseFloat(data.Transport) > 0) {
+                const transport = parseFloat(data.Transport);
+                grand += transport;
+                console.log(`Added Transport: ${transport}, Total: ${grand}`);
+            }
+            
+            // 3. Add Labour if exists
+            if (data.Labour && parseFloat(data.Labour) > 0) {
+                const labour = parseFloat(data.Labour);
+                grand += labour;
+                console.log(`Added Labour: ${labour}, Total: ${grand}`);
+            }
+            
+            // 4. Add StandAdv if exists
+            if (data.StandAdv && parseFloat(data.StandAdv) > 0) {
+                const standAdv = parseFloat(data.StandAdv);
+                grand += standAdv;
+                console.log(`Added StandAdv: ${standAdv}, Total: ${grand}`);
+            }
+            
+            // 5. Add GST or Extra
+            if (data.Extra && parseFloat(data.Extra) > 0) {
+                const extra = parseFloat(data.Extra);
+                grand += extra;
+                console.log(`Added Extra: ${extra}, Total: ${grand}`);
+            } else if (data.GST) {
+                const gst = parseFloat(data.GST) || 0;
+                grand += gst;
+                console.log(`Added GST: ${gst}, Total: ${grand}`);
+            }
+            
+            console.log("Final Grand Total:", grand);
+            return grand;
+       
     }
-    else{
-        grand+=data.GST
-    }
-    return grand;
-}
+
   return (
            <table id="internal-table">
                 <tbody>
@@ -39,11 +74,11 @@ const GetFinal=()=>{
             </tr>
    <tr>
               <td colSpan={4}>
-                Sales Man Reff: 
+                Sales Man Reff: &nbsp;
                 {data.SalesMan}
               </td>
               <td colSpan={3}>
-                Arc / Interior Designer  
+                Arc / Interior Designer :&nbsp;
                  {data.Designer}
               </td>
             </tr>

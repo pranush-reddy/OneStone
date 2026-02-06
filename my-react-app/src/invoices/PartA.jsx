@@ -61,11 +61,6 @@ const [isSubmitted,SetSubmitted]=useState(false);
   const day = String(d.getDate()).padStart(2, '0');
   return `${day}-${month}-${year}`;
 };
-  // const subtotal =
-  //   Number(amount) +
-  //   Number(props.Transport) +
-  //   Number(props.Labour) +
-  //   Number(props.StandAdv);
 
 const generatePDF = () => {
   const input = document.querySelector(".invoice");
@@ -208,10 +203,7 @@ const shareToWhatsAppDesktop = async () => {
 }
 const CalRate=()=>{
         if(Extra>1){
-            const amt=(Extra/0.18).toFixed(2);
             return ((MainGrand()-Transport-Labour)/data.grandTotal).toFixed(2);
-        }else{
-          return 1;
         }
     }
     const MainGrand=()=>{
@@ -241,18 +233,35 @@ let allInvoices = {};
 if(sessionStorage.getItem("InvoiceDetails")) {
   allInvoices = JSON.parse(sessionStorage.getItem("InvoiceDetails"));
 }
-let filtered_items=[];
-data.items.map((item, index) => (
+// Assuming Rate is an array like: Rate = [100, 200, 300...]
+// Assuming CalRate() returns a rate value
+
+let filtered_items = [];
+data.items.forEach((item, index) => {
+  // Determine the rate
+  let rateValue;
+  
+  if (Extra > 0) {
+    // If Extra is defined in this scope
+    rateValue = CalRate(item); // Pass item if CalRate needs it
+  } else {
+    // Assuming Rate is an array indexed by item.id
+    rateValue = rates[item.id] || 0; // Fallback to 0 if not found
+  }
+  
+  // Calculate amount
+  const amount = (rateValue * (item.totalArea || 0)).toFixed(2);
+  
   filtered_items.push({
-    "id":item.id,
+    "id": item.id,
     "ColorSelect": item.ColorSelect,
-            "LotID": item.LotID,
-            "totalArea": item.totalArea?.toFixed(2),
-            "rate":CalRate(),
-            "pieces":item.rows?.length,
-            "amount":(CalRate()*item.totalArea).toFixed(2)
-  })
-))
+    "LotID": item.LotID,
+    "totalArea": (item.totalArea || 0).toFixed(2),
+    "rate": rateValue, // Store the actual value, not function
+    "pieces": item.rows?.length || 0,
+    "amount": parseFloat(amount) // Convert back to number if needed
+  });
+});
 // Add new invoice to the hashmap
 allInvoices[invoiceNumber] = {
   Name: data.Name,
@@ -262,9 +271,9 @@ allInvoices[invoiceNumber] = {
   Dispatch1: Number(AGrand()).toFixed(2),
   Dispatch2: BsecGrand().toFixed(2),
   items:filtered_items,
-  Address:Address,
-  Designer:Designer,
-  SalesMan:SalesMan,
+  Address:data.Address,
+  Designer:data.Refer,
+  SalesMan:data.SalesMan,
   grandTotal: data.grandTotal,
   GST:GetGst()
   }
