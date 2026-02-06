@@ -78,9 +78,9 @@ td.sizes{
 }
 
 .area-cell {
-  background-color: #f6ffed;
-  font-weight: 600;
-  color: #389e0d;
+  background-color: #ffffff;
+  font-weight: 400;
+  color: #000000;
   width: 14%;
 }
 
@@ -118,7 +118,14 @@ td.sizes{
   transition: all 0.3s;
   min-width: 120px;
 }
-
+.remove{
+ width: 100%;
+ display: flex;
+ justify-content: flex-end;
+ margin-top: 2%;
+}.remove button{
+  padding: 0.7rem;
+}
 .btn-primary {
   background: #1890ff;
   color: white;

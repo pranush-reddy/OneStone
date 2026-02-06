@@ -30,6 +30,7 @@ width: 70vw !important;
 #invoice-table th,
 #invoice-table td {
   font-size: 13px;
+  padding: 3px;
   border: 0.5px solid #000 !important; /* Use 0.5px instead of 1px */
 }
 

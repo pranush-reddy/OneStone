@@ -1,37 +1,35 @@
 .grid{
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1.1fr 4fr;
     
 }.side-bars{
-    color:rgb(0, 0, 0);
     display: flex;
     align-items:flex-start;
     padding-top: 6vh;
-    position:sticky;
-    padding-left: 30px;
     height: 100vh;
     background-color: rgb(253, 253, 253);
 }.side-bars ul{
-    
+    position: fixed;
     list-style: none;
 }.side-bars ul li{
-    color:rgb(0, 0, 0);
-    font-size: 20px;
-    font-family: sans-serif;
-    margin: 20px;
-    width:12vw;
-    margin-bottom: 10vh;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 20px ;
 }a{
     padding: 17px;
-    width: 20px;
-    border-radius: 20px;
-    padding-right: 40px;
+    
+    color:rgb(55 65 81) ;
+    font-size: medium;
+    font-weight: 500;
+    display: flex;
+    border-radius: 15px;
     text-decoration: none;
 }
 li a.active{
     color:white;
+    width: 100%;
     background-color: rgb(125, 44, 223);   
 }a:hover{
+    width: 100%;
     background-color: rgb(236, 236, 236);
 }
 .pages{
@@ -42,4 +40,17 @@ li a.active{
     padding: 2%;
     margin: 20px 0px 0px 20px;
     background-color: white;
+}.overview-header{
+    margin: 2em 0;
+    color: rgb(147, 87, 220);
+
+}
+.overview-header button{
+    float: right;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgb(107, 106, 106);
+    background: rgb(153, 64, 212);
 }

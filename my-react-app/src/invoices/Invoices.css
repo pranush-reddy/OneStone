@@ -30,16 +30,20 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+
 .invoices-table th {
-  background: #7d2cdf;
-  color: white;
+  color: rgb(0, 0, 0);
+  font-weight: 500;
+  border: none;
   padding: 15px;
   text-align: left;
 }
 
 .invoices-table td {
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  padding: 25px 15px;
+  border: none;
+  color: #333;
 }
 
 .invoices-table tr:hover {

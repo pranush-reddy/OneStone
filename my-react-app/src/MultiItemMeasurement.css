@@ -12,8 +12,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
 }
 
 .item-header h3 {
@@ -84,8 +82,17 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}.action-buttons{
+  display: flex;
+  justify-content: space-between;
+  padding:5px 10%;
 }
 
 .submit-all-section button:hover {
   background: #138496;
+}
+.grand-total-label{
+  border: 1px solid black;
+  padding: 1em;
+  border-radius: 10px;
 }

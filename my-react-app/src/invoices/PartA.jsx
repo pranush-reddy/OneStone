@@ -206,14 +206,27 @@ const shareToWhatsAppDesktop = async () => {
   
   URL.revokeObjectURL(url);
 }
-
+const CalRate=()=>{
+        if(Extra>1){
+            const amt=(Extra/0.18).toFixed(2);
+            return ((MainGrand()-Transport-Labour)/data.grandTotal).toFixed(2);
+        }else{
+          return 1;
+        }
+    }
+    const MainGrand=()=>{
+  if(Extra<1){
+    return GetGrand();
+  }
+  let amt=Amt();
+  return (amt+Number(Transport)+Number(Labour));
+}
   const HandleInvoice = (e) => {
     e.preventDefault();
-    if (Name != "" && Item != "" && Quantity != 0 && Rate != 0) {
-  let ind = 1;
-  SetSaveStatus("processing...")
+    if (rates!="" && data!={}) {
+    let ind = 1;
+   SetSaveStatus("processing...")
 
-// Get or initialize index
 if(sessionStorage.getItem("index")){
   ind = parseInt(sessionStorage.getItem("index"));
 } else {
@@ -228,16 +241,43 @@ let allInvoices = {};
 if(sessionStorage.getItem("InvoiceDetails")) {
   allInvoices = JSON.parse(sessionStorage.getItem("InvoiceDetails"));
 }
-
+let filtered_items=[];
+data.items.map((item, index) => (
+  filtered_items.push({
+    "id":item.id,
+    "ColorSelect": item.ColorSelect,
+            "LotID": item.LotID,
+            "totalArea": item.totalArea?.toFixed(2),
+            "rate":CalRate(),
+            "pieces":item.rows?.length,
+            "amount":(CalRate()*item.totalArea).toFixed(2)
+  })
+))
 // Add new invoice to the hashmap
 allInvoices[invoiceNumber] = {
-  Name: Name,
+  Name: data.Name,
   No: invoiceNumber,
-  Date: SelectDate,
+  Date:formatDateToYMD(SelectDate),
   Grand:FindGrand().toFixed(2),
   Dispatch1: Number(AGrand()).toFixed(2),
-  Dispatch2: BsecGrand().toFixed(2)
-};
+  Dispatch2: BsecGrand().toFixed(2),
+  items:filtered_items,
+  Address:Address,
+  Designer:Designer,
+  SalesMan:SalesMan,
+  grandTotal: data.grandTotal,
+  GST:GetGst()
+  }
+  if(Extra>0){
+    allInvoices[invoiceNumber]={  ...allInvoices[invoiceNumber],
+      Transport:Transport,
+      StandAdv:StandAdv,
+      Labour:Labour,
+      Extra:Extra
+    }
+  }
+console.log(allInvoices);
+
 SetSaveStatus("Saved!!")
 // Save updated invoices back to sessionStorage
 sessionStorage.setItem("InvoiceDetails", JSON.stringify(allInvoices));
@@ -245,10 +285,9 @@ sessionStorage.setItem("InvoiceDetails", JSON.stringify(allInvoices));
 ind = ind + 1;
 sessionStorage.setItem("index", ind.toString());
 
-console.log(`Invoice saved: ${invoiceNumber}`);
+console.log(`Invoice saved: ${invoiceNumber}`);};
       setDisabled(true);
     }
-  };
 
 const GetGrand=()=>{
     if(Extra<1){

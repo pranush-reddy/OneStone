@@ -25,7 +25,7 @@ function Table({
                 </select>
               </th>
               <th colSpan={7}>Lot Id</th>
-              <th colSpan={1} style={{ padding: '0px' }}>
+              <th colSpan={1} style={{ padding: '0px',margin:'0px' ,width:'20vw'}}>
                 <select 
                   style={{ width: '100%', height: '6vh', textAlign: 'center' }}
                   className="color-select"

@@ -211,18 +211,10 @@ function MultiItemMeasurement({
         <button className="btn btn-primary add-item-btn" onClick={addItem}>
           <span className="btn-icon">+</span> Add New Item
         </button>
-        <p className="add-item-hint">Click to add another measurement table</p>
-      </div>
-      
-      {/* Grand Total */}
-      <div className="grand-total-section">
-        <div className="grand-total-card">
-          <div className="grand-total-label">Grand Total (All Items)</div>
-          <div className="grand-total-value">
-            {grandTotal.toFixed(2)} sq ft
-          </div>
         </div>
-      </div>
+        
+        
+        <div className="grand-total-label">Grand Total: {grandTotal.toFixed(2)} sq ft</div>
       
       {/* Action Buttons */}
       <div className="action-buttons">
@@ -230,9 +222,7 @@ function MultiItemMeasurement({
           <button className="btn btn-outline-danger cancel-btn" onClick={handleCancel}>
             Cancel & Reset
           </button>
-          <button className="btn btn-outline-secondary back-btn" onClick={handleBack}>
-            ← Go Back
-          </button>
+        
         </div>
         <div className="right-buttons">
           <button className="btn btn-success btn-lg submit-btn" onClick={handleSubmit}>
@@ -241,14 +231,7 @@ function MultiItemMeasurement({
         </div>
       </div>
       
-      {/* Footer Info */}
-      <div className="footer-info">
-        <p>
-          <strong>Items Added:</strong> {items.length} | 
-          <strong> Total Items Area:</strong> {grandTotal.toFixed(2)} sq ft | 
-          <strong> Status:</strong> Ready to Submit
-        </p>
-      </div>
+     
     </div>
   );
 }

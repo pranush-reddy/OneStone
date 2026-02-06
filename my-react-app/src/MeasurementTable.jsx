@@ -137,12 +137,12 @@ useEffect(() => {
 
   // Render input field for table cells
   const renderInput = (rowId, fieldName, value) => (
-    <input
+    <input style={{height:'2.2em'}}
       type="number"
       step="0.1"
       value={value}
       onChange={(e) => updateRow(rowId, fieldName, e.target.value)}
-      placeholder="0"
+    
       className="table-input"
     />
   );
@@ -164,44 +164,43 @@ useEffect(() => {
       </td>
       
       {/* Main Size */}
-      <td className='sizes'>{renderInput(row.id, 'length', row.length)}</td>
-      <td className="multiplier">×</td>
-      <td className='sizes'>{renderInput(row.id, 'width', row.width)}</td>
+      <td className='sizes' style={{padding:'0px'}}>{renderInput(row.id, 'length', row.length)}</td>
+      <td className="multiplier" style={{padding:'0px'}}>×</td>
+      <td className='sizes' style={{padding:'0px'}}>{renderInput(row.id, 'width', row.width)}</td>
       
       {/* Less 1 */}
-      <td>{renderInput(row.id, 'less1Length', row.less1Length)}</td>
-      <td className="multiplier">×</td>
-      <td>{renderInput(row.id, 'less1Width', row.less1Width)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less1Length', row.less1Length)}</td>
+      <td className="multiplier" style={{padding:'0px'}}>×</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less1Width', row.less1Width)}</td>
       
       {/* Less 2 */}
-      <td>{renderInput(row.id, 'less2Length', row.less2Length)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less2Length', row.less2Length)}</td>
       <td className="multiplier">×</td>
-      <td>{renderInput(row.id, 'less2Width', row.less2Width)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less2Width', row.less2Width)}</td>
       
       {/* Less 3 */}
-      <td>{renderInput(row.id, 'less3Length', row.less3Length)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less3Length', row.less3Length)}</td>
       <td className="multiplier">×</td>
-      <td>{renderInput(row.id, 'less3Width', row.less3Width)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less3Width', row.less3Width)}</td>
       
       {/* Less 4 */}
-      <td>{renderInput(row.id, 'less4Length', row.less4Length)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less4Length', row.less4Length)}</td>
       <td className="multiplier">×</td>
-      <td>{renderInput(row.id, 'less4Width', row.less4Width)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less4Width', row.less4Width)}</td>
       
       {/* Less 5 */}
-      <td>{renderInput(row.id, 'less5Length', row.less5Length)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less5Length', row.less5Length)}</td>
       <td className="multiplier">×</td>
-      <td>{renderInput(row.id, 'less5Width', row.less5Width)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less5Width', row.less5Width)}</td>
       
       {/* Less 6 */}
-      <td>{renderInput(row.id, 'less6Length', row.less6Length)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less6Length', row.less6Length)}</td>
       <td className="multiplier">×</td>
-      <td>{renderInput(row.id, 'less6Width', row.less6Width)}</td>
+      <td style={{padding:'0px'}}>{renderInput(row.id, 'less6Width', row.less6Width)}</td>
       
       {/* Area */}
-      <td className="area-cell" style={{ width: '8%' }}>
+      <td className="area-cell" style={{ width: '8%',padding:'0px' }}>
         <span className="area-value">{row.area.toFixed(2)}</span>
-        <span className="area-unit">{unit === 'inch to feet' ? 'sq ft' : 'sq m'}</span>
       </td>
     </tr>
   );
@@ -209,14 +208,15 @@ useEffect(() => {
   return (
     <div className="measurement-container">
       <div className="item-header">
-        <h3>Item #{itemId}</h3>
+        
         {itemId > 1 && (
+          <div 
+            className="remove">
           <button 
-            className="btn btn-danger btn-sm"
             onClick={removeItem}
           >
-            Remove Item
-          </button>
+            Remove 
+          </button></div>
         )}
       </div>
       
@@ -236,10 +236,6 @@ useEffect(() => {
         />
         
         <div className='total-area-each'>
-          {/* Unit Selection */}
-         
-          
-          {/* Total Area Display */}
           <div className="total-display">
             <span className="total-label">Item Total Area:</span>
             <span className="total-value">
@@ -265,18 +261,7 @@ useEffect(() => {
           </div>
         </div>
         
-        {/* Data Preview (for debugging) */}
-        <details className="data-preview">
-          <summary>Preview Data for Item #{itemId}</summary>
-          <pre>{JSON.stringify({
-            itemId: itemId,
-            ColorSelect: ColorSelect,
-            LotID: LotID,
-            unit: unit,
-            rows: rows,
-            totalArea: totalArea
-          }, null, 2)}</pre>
-        </details>
+
       </div>
     </div>
   );

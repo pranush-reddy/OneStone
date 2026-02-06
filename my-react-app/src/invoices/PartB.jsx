@@ -10,7 +10,7 @@ function PartB({Designer,Address,Date,Name,
         Labour,StandAdv,Rate,
         GST,data,Grand}) {
 
-
+ 
 const GetGrand=()=>{
     if(Extra<1){
         return Grand;
@@ -25,7 +25,7 @@ const MainGrand=()=>{
     return GetGrand();
   }
   let amt=Amt();
-  return amt+Number(Transport)+Number(Labour);
+  return (amt+Number(Transport)+Number(Labour));
 }
 const CalculateGst=()=>{
     if(Extra<1){
@@ -48,8 +48,9 @@ const CalculateGst=()=>{
         }
     }
     const formatForDisplay = (yyyymmdd) => {
+      if(yyyymmdd){
   const [yyyy, mm, dd] = yyyymmdd.split("-");
-  return `${dd}-${mm}-${yyyy}`; 
+  return `${dd}-${mm}-${yyyy}`; }
 };
   const generatePDF = () => {
     const input = document.getElementById("internal-table");
@@ -288,7 +289,7 @@ const shareToWhatsAppDesktop = async () => {
               <td> </td>
               <td> </td>
               <td>Grand Total</td>
-              <td style={{textAlign:'right'}}>{"₹ "+ MainGrand().toFixed(2)}</td>
+              <td style={{textAlign:'right'}}>₹ {Number(MainGrand()).toFixed(2)}</td>
             </tr></tbody>
           </table>
     </div>
