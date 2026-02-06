@@ -3,9 +3,13 @@ import { useState,useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "./PartB.css";
-import SmartPanel from "./SmartPanel";
 
-function PartB({Extra,Amount,Quantity,Rate,Transport,Labour,StandAdv,GST,Grand ,Name, Date,Address,SalesMan,Item,Lot,Pcs,Designer,}) {
+function PartB({Designer,Address,Date,Name,
+       Items,Extra,SalesMan,
+        Amount,Transport,
+        Labour,StandAdv,Rate,
+        GST,data,Grand}) {
+
 
 const GetGrand=()=>{
     if(Extra<1){
@@ -36,13 +40,13 @@ const CalculateGst=()=>{
         }
     }
     const CalRate=()=>{
-        if(Extra<1){
-               return Number(Rate);
+        if(Extra>1){
+            const amt=(Extra/0.18).toFixed(2);
+            return ((MainGrand()-Transport-Labour)/data.grandTotal).toFixed(2);
         }else{
-            const amt=Amt();
-            return Number(amt/Quantity);
+          return 1;
         }
-    }  
+    }
     const formatForDisplay = (yyyymmdd) => {
   const [yyyy, mm, dd] = yyyymmdd.split("-");
   return `${dd}-${mm}-${yyyy}`; 
@@ -222,64 +226,23 @@ const shareToWhatsAppDesktop = async () => {
               <td>Rate</td>
               <td>Amount</td>
             </tr>
-            <tr className="items">
-              <td>1</td>
-              <td>
-                {Item}
+       {Items.map((item, index) => (
+          
+  <tr key={item.id || index}>
+    <td style={{ textAlign: 'center' }}>{item.id}</td>
+    <td>{item.ColorSelect || ''}</td>
+    <td>{item.LotID || ''}</td>
+    <td>{item.rows?.length || ''}</td>
+    <td>{item.totalArea?.toFixed(2) || '0.00'}</td>
+   <td>
+                {CalRate()}
               </td>
-              <td> {Lot}</td>
-                     <td> {Pcs}</td>
-              <td>
-                
-                {Quantity}
+              <td style={{textAlign:'right'}}>
+                {(CalRate()*item.totalArea).toFixed(2)}
               </td>
-              <td>
-               {CalRate().toFixed(2)}
-              </td>
-              <td>{Amt()}</td>
-            </tr>
-            <tr className="items">
-              <td>2</td>
-              <td>
-              </td>
-              <td> </td>
-                     <td> </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr className="items">
-              <td>3</td>
-              <td>
-              </td>
-              <td> </td>
-                     <td> </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr className="items">
-              <td>4</td>
-              <td>
-              </td>
-              <td> </td>
-                     <td> </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr className="items">
-              <td>5</td>
-              <td>
-              </td>
-              <td> </td>
-                     <td> </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-
-            
+   
+  </tr>
+))}
            {Transport &&  (<>
             <tr>
               <td> </td>
@@ -289,7 +252,7 @@ const shareToWhatsAppDesktop = async () => {
               <td> </td>
               <td> </td>
               <td>Transport</td>
-              <td> {Transport || 0}</td>
+              <td style={{textAlign:'right'}}> {Transport || 0}</td>
             </tr></>)}
            {(Labour>1)  && (<><tr>
               <td> </td>
@@ -297,8 +260,8 @@ const shareToWhatsAppDesktop = async () => {
                <td></td>
               <td> </td>
               <td> </td>
-              <td>Labour</td>
-              <td>{Labour || 0}</td>
+              <td >Labour</td>
+              <td style={{textAlign:'right'}}>{Labour || 0}</td>
             </tr></>)}
             {(StandAdv>1) && (<><tr>
               <td> </td>
@@ -307,7 +270,7 @@ const shareToWhatsAppDesktop = async () => {
               <td> </td>
               <td> </td>
               <td>Stand Adv</td>
-              <td> {StandAdv || 0}</td>
+              <td style={{textAlign:'right'}}> {StandAdv || 0}</td>
             </tr></>)}
             <tr>
               <td> </td>
@@ -316,7 +279,7 @@ const shareToWhatsAppDesktop = async () => {
               <td> </td>
               <td> </td>
               <td>GST (18%)</td>
-              <td>{CalculateGst()}</td>
+              <td style={{textAlign:'right'}}>{CalculateGst()}</td>
             </tr>
             <tr>
               <td> </td>
@@ -325,7 +288,7 @@ const shareToWhatsAppDesktop = async () => {
               <td> </td>
               <td> </td>
               <td>Grand Total</td>
-              <td>{ MainGrand()}</td>
+              <td style={{textAlign:'right'}}>{"₹ "+ MainGrand().toFixed(2)}</td>
             </tr></tbody>
           </table>
     </div>

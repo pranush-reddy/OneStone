@@ -28,7 +28,7 @@ const GetGrand=()=>{
     if(Extra<1){
         return Grand;
     }else{
-        return Number(Number(Number(data.grandTotal)*CalRate().toFixed(2)).toFixed(2))+Number(CalculateGst());
+        return ((data.grandTotal * CalRate())+Number(CalculateGst())).toFixed(2);
     }
 }
 const CalculateGst=()=>{
@@ -47,8 +47,6 @@ const CalculateGst=()=>{
     // }
     const CalRate=()=>{
         if(Extra>1){
-               
-        
             const amt=(Extra/0.18).toFixed(2);
             return Number(amt/data.grandTotal);
         }else{
@@ -252,10 +250,10 @@ useEffect(()=>{
     <td>{item.ColorSelect || ''}</td>
     <td>{item.totalArea?.toFixed(2) || '0.00'}</td>
    <td>
-               {Extra>1 ? CalRate().toFixed(2) :Rate[item.id] }
+               {Extra>1 ? (Math.floor(CalRate() * 100) / 100).toFixed(2) :Rate[item.id] }
               </td>
               <td style={{textAlign:'right'}}>
-               {Extra<1 ? Number(Rate[item.id]* item.totalArea).toFixed(2) : (CalRate()*item.totalArea).toFixed(2) }
+               {Extra<1 ? Number(Rate[item.id]* item.totalArea).toFixed(2) : (CalRate()*item.totalArea).toFixed(2)}
               </td>
    
   </tr>
@@ -275,7 +273,7 @@ useEffect(()=>{
               <td> </td>
               <td> </td>
               <td>Transport</td>
-              <td> {Transport || 0}</td>
+              <td style={{textAlign:'right'}}> {Transport || 0}</td>
             </tr>
             <tr>
               <td> </td>
@@ -283,7 +281,7 @@ useEffect(()=>{
               <td> </td>
               <td> </td>
               <td>Labour</td>
-              <td>{Labour || 0}</td>
+              <td style={{textAlign:'right'}}>{Labour || 0}</td>
             </tr>
             <tr>
               <td> </td>
@@ -291,14 +289,14 @@ useEffect(()=>{
               <td> </td>
               <td> </td>
               <td>Stand Adv</td>
-              <td> {StandAdv || 0}</td>
+              <td style={{textAlign:'right'}}> {StandAdv || 0}</td>
             </tr></>)}
             <tr>
               <td></td>
               <td></td>
               <td></td>
               <td>Sub Total:</td>
-              <td>{Number(Number(data?.grandTotal) * CalRate()?.toFixed(2) || 0).toFixed(2) || 0}</td>
+              <td style={{textAlign:'right'}}>{Number(Number(data?.grandTotal) * CalRate() || 0).toFixed(2) || 0}</td>
             </tr>
             <tr>
               <td> </td>
@@ -306,7 +304,7 @@ useEffect(()=>{
               
               <td> </td>
               <td>GST (18%)</td>
-              <td>{CalculateGst()}</td>
+              <td style={{textAlign:'right'}}>{CalculateGst()}</td>
             </tr>
             <tr>
               <td> </td>
@@ -314,7 +312,7 @@ useEffect(()=>{
               <td> </td>
               <td> </td>
               <td>Grand Total</td>
-              <td>{ GetGrand()}</td>
+              <td style={{textAlign:'right'}}>{ GetGrand()}</td>
             </tr></tbody> 
           </table>
               <div className="btns">

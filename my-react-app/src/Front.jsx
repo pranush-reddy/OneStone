@@ -179,15 +179,7 @@ function Front() {
 
             <div className="ln_solid"></div>
 
-            {/* Form Buttons (Optional) */}
-            <div className="form-buttons">
-              <button type="button" className="btn btn-secondary">
-                Cancel
-              </button>
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </div>
+            
           </div>
         </form>
       </div>

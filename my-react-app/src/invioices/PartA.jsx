@@ -719,25 +719,24 @@ const CalTotAmt=()=>{
         Grand={FindGrand().toFixed(2)}
       />
 
-      {/* <PartB
-        Name={"Name"}
-        SalesMan={"SalesMan"}
-        Designer={Designer}
-        Address={"sd"}
-        Date={SelectDate}
-        Item={Item}
-        Lot={Lot}
-        Pcs={Pcs}
+      <PartB
+        Name={data.Name}
+        SalesMan={data.SalesMan}
+        Designer={data.Refer}
+        Address={data.Address}
+        Date={formatDateToYMD(data.ThisDate)}
+       Items={data.items}
         Extra={Extra}
         Quantity={Quantity}
         Amount={CalTotal()}
-        Rate={Rate}
+        Rate={rates}
         Transport={Transport}
         Labour={Labour}
         StandAdv={StandAdv}
         GST={GetGst()}
+        data={data}
         Grand={FindGrand().toFixed(2)}
-      /> */}
+      />
       <div style={{display:'flex',justifyContent:'center',gap:'25px'}}>
         <button onClick={HandleInvoice} className="btn-pdf" type="submit">
           {SaveStatus}
